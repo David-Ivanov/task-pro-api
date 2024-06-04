@@ -1,6 +1,9 @@
 import express from "express";
-import { current, login, logout, register, sendEmailAgain, verify } from "../controllers/authControllers.js";
 import auth from "../middleware/authMiddleware.js";
+import register from "../controllers/authControllers/register.js";
+import login from "../controllers/authControllers/login.js";
+import logout from "../controllers/authControllers/logout.js";
+import current from "../controllers/authControllers/current.js";
 
 const authRouter = express.Router();
 
@@ -10,7 +13,5 @@ authRouter.post("/register", jsonParse, register);
 authRouter.post("/login", jsonParse, login);
 authRouter.post("/logout", auth, logout);
 authRouter.get("/current", auth, current);
-authRouter.get("/verify/:verificationToken", verify);
-authRouter.post("/verify", jsonParse, sendEmailAgain);
 
 export default authRouter;
