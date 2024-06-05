@@ -36,7 +36,7 @@ const register = async (req, res) => {
         avatarURL,
     }
 
-    const newUser = await User.create(user);
+    await User.create(user);
     res.status(201).send({ user: { email, name } });
 }
 
