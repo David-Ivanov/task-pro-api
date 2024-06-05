@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import { createHelpSchema } from "../../schemas/usersSchema";
+import HttpError from "../../helpers/HttpError.js";
 
 dotenv.config();
 const { MAILTRAP_PASSWORD, MAILTRAP_USERNAME } = process.env
