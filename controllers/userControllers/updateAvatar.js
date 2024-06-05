@@ -18,14 +18,14 @@ const updateAvatar = async (req, res) => {
         // user already have avatar
         const findUser = await User.findById(data.id);
         if (findUser.avatarId) {
-            const a = await cloudinary.api.delete_resources([findUser.avatarId],
+            cloudinary.api.delete_resources([findUser.avatarId],
                 { type: 'upload', resource_type: 'image' }
             );
         }
 
         const { path: tempPath } = req.file;
-        // change size
 
+        // change size
         const avatar = await Jimp.read(tempPath);
         avatar.resize(250, 250).write(tempPath);
 
