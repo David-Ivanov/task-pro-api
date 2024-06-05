@@ -15,4 +15,4 @@ userRouter.patch("/edit", jsonParse, auth, editProfile);
 userRouter.patch("/theme", jsonParse, auth, changeTheme);
 userRouter.put("/help", jsonParse, auth, needHelp);
 
-export default userRouter;
+export default userRouter; 

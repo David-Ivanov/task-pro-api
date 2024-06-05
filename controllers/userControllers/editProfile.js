@@ -1,10 +1,12 @@
 import User from "../../models/authModel.js";
 import { createEditSchema } from "../../schemas/usersSchema.js";
-
+import HttpError from "../../helpers/HttpError.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const editProfile = async (req, res) => {
     try {
-        const { email, name, password } = req.body;
+        let { email, name, password } = req.body;
 
         // validate
         const { error } = createEditSchema.validate(req.body);
@@ -22,6 +24,7 @@ const editProfile = async (req, res) => {
         if (!name) {
             name = user.name
         }
+
         if (!email) {
             email = user.email
         }
@@ -40,7 +43,8 @@ const editProfile = async (req, res) => {
 
         res.status(200).send({ email, name, password })
     } catch (err) {
-        res.status(500)
+        console.log(err);
+        res.status(500).send({ message: HttpError(500).message })
     }
 
 }
