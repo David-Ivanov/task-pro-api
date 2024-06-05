@@ -2,6 +2,8 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import path from "node:path";
+import { v2 as cloudinary } from 'cloudinary';
+
 
 import boardsRouter from "./routes/boardsRouter.js";
 import authRouter from "./routes/authRouter.js";
@@ -11,6 +13,11 @@ import cardsRouter from "./routes/cardsRouter.js";
 
 const app = express();
 
+cloudinary.config({
+    cloud_name: 'daqlrgzqj',
+    api_key: '784961374618977',
+    api_secret: 'O5P8EPL5rIC_WDAb1IMUeMW_sHs'
+});
 
 app.use(morgan("tiny"));
 app.use(cors());
