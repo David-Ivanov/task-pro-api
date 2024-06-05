@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
-import { createHelpSchema } from "../../schemas/usersSchema";
+import { createHelpSchema } from "../../schemas/usersSchema.js";
 import HttpError from "../../helpers/HttpError.js";
 
 dotenv.config();
@@ -33,6 +33,7 @@ const needHelp = async (req, res) => {
         await transport.sendMail({
             from: email,
             to: "taskpro.project@gmail.com",
+            subject: "Need help!",
             text: comment,
             html: `<p>${comment}</p>`,
         });
