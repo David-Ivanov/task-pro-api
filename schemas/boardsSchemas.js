@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 export const createBoardSchema = Joi.object({
-  title: Joi.string().min(1).max(50).required().messages({
+  title: Joi.string().min(1).max(50).required().trim().messages({
     "any.required": "title value is required",
     "string.base": "'title' must be string type",
     "string.min": "Min. title length is 1 symbol",
@@ -16,10 +16,20 @@ export const createBoardSchema = Joi.object({
 });
 
 export const updateBoardSchema = Joi.object({
-  name: Joi.string().min(3),
-  email: Joi.string().email().min(3),
-  phone: Joi.string().min(4),
-});
+  title: Joi.string().min(1).max(50).trim().messages({
+    "string.base": "'title' must be string type",
+    "string.min": "Min. title length is 1 symbol",
+    "string.max": "Max. title length is 50 symbols",
+  }),
+  background: Joi.string().trim().messages({
+    "string.base": "'background' must be string type",
+  }),
+  icon: Joi.string().trim().messages({
+    "string.base": "'icon' must be string type",
+  }),
+})
+  .min(1)
+  .messages({ "object.min": "No request body" });
 
 export const changeBoardsBackgroundSchema = Joi.object({
   background: Joi.string().required().messages({
