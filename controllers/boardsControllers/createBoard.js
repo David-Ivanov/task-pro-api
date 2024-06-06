@@ -12,7 +12,7 @@ const createBoard = async (req, res) => {
 
   try {
     const board = await Board.create({
-      title,
+      title: value.title,
       background,
       icon,
       owner: req.user._id,
