@@ -13,7 +13,9 @@ export const createBoardSchema = Joi.object({
   icon: Joi.string().messages({
     "string.base": "'icon' must be string type",
   }),
-});
+})
+  .min(1)
+  .messages({ "object.min": "No request body" });
 
 export const updateBoardSchema = Joi.object({
   title: Joi.string().min(1).max(50).trim().messages({
