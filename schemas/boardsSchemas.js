@@ -9,3 +9,9 @@ export const updateBoardSchema = Joi.object({
   email: Joi.string().email().min(3),
   phone: Joi.string().min(4),
 });
+
+export const changeBoardsBackgroundSchema = Joi.object({
+  background: Joi.string().required().messages({
+    "any.required": "background value is required",
+  }),
+});

@@ -7,7 +7,6 @@ const createBoard = async (req, res) => {
   const { error, value } = createBoardSchema.validate({ title });
 
   if (error) {
-    console.log(error);
     return res.status(400).send({ message: HttpError(400).message });
   }
 
@@ -21,7 +20,6 @@ const createBoard = async (req, res) => {
 
     res.status(201).send({ data: board });
   } catch (e) {
-    console.log(e);
     res.status(400).send({ message: HttpError(400).message }); //fix
   }
 };
