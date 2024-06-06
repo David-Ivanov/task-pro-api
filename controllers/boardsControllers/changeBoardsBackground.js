@@ -8,7 +8,7 @@ const changeBoardsBackground = async (req, res) => {
 
   // перевірка помилок валідації + корректності переданого ІД
   if (error) {
-    return res.status(400).send({ message: HttpError(400).message });
+    return res.status(400).send({ message: error.message });
   } else if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(404).send({ message: HttpError(404).message });
   }
@@ -26,7 +26,7 @@ const changeBoardsBackground = async (req, res) => {
 
     return res.status(200).send({ data: board });
   } catch (e) {
-    return res.status(500).send({ message: HttpError(500).message });
+    return res.status(500).send({ message: HttpError(500, e.message).message });
   }
 };
 

@@ -18,8 +18,9 @@ const getBoard = async (req, res) => {
     }
 
     return res.status(200).send({ data: board });
-  } catch (e) {}
-  return res.status(500).send({ message: HttpError(500).message });
+  } catch (e) {
+    return res.status(500).send({ message: HttpError(500, e.message).message });
+  }
 };
 
 export default getBoard;
