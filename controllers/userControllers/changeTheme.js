@@ -21,7 +21,7 @@ const changeTheme = async (req, res) => {
             { theme },
         );
 
-        res.status(200).send({ theme });
+        res.status(200).send({ data: { theme } });
     } catch (err) {
         res.status(400).send({ message: HttpError(400).message });
     }
