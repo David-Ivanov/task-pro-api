@@ -45,7 +45,7 @@ const updateAvatar = async (req, res) => {
             { new: true }
         );
 
-        res.status(200).send({ avatarURL: user.avatarURL });
+        res.status(200).send({ data: { avatarURL: user.avatarURL } });
     } catch (error) {
         res.status(500).send({ message: HttpError(500).message });
     }
