@@ -20,7 +20,7 @@ const createBoard = async (req, res) => {
 
     res.status(201).send({ data: board });
   } catch (e) {
-    res.status(400).send({ message: HttpError(400).message }); //fix
+    return res.status(500).send({ message: HttpError(500).message });
   }
 };
 
