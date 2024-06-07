@@ -25,7 +25,6 @@ const editProfile = async (req, res) => {
         if (!name) {
             name = user.name
         }
-
         if (!email) {
             email = user.email
         }
@@ -35,6 +34,14 @@ const editProfile = async (req, res) => {
             password = await bcrypt.hash(password, 10);
         }
 
+
+        // update avatar 
+        let result;
+        if (req.file) {
+            result = await updateAvatar(req, res, data);
+        }
+
+        console.log(result);
         // update user
         await User.findByIdAndUpdate(
             data.id,
@@ -42,19 +49,16 @@ const editProfile = async (req, res) => {
                 email,
                 name,
                 password,
+                avatarURL: result.avatarURL,
+                avatarId: result.avatarId,
             },
             { new: true }
         );
 
-        // update avatar 
 
-        let avatarURL;
-        if (req.file) {
-            avatarURL = await updateAvatar(req, res);
-        }
-
-        res.status(200).send({ data: { email, name, password, avatarURL } });
+        res.status(200).send({ data: { email, name, password, avatarURL: result.avatarURL } });
     } catch (err) {
+        console.log(err);
         res.status(500).send({ message: HttpError(500).message })
     }
 }
