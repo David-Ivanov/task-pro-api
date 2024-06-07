@@ -37,7 +37,7 @@ const register = async (req, res) => {
     }
 
     await User.create(user);
-    res.status(201).send({ user: { email, name } });
+    res.status(201).send({ data: { user: { email, name } } });
 }
 
 export default register;
