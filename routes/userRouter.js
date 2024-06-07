@@ -1,6 +1,5 @@
 import express from "express";
 import auth from "../middleware/authMiddleware.js";
-import updateAvatar from "../controllers/userControllers/updateAvatar.js";
 import editProfile from "../controllers/userControllers/editProfile.js";
 import changeTheme from "../controllers/userControllers/changeTheme.js";
 import needHelp from "../controllers/userControllers/needHelp.js";
