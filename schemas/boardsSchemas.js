@@ -71,3 +71,18 @@ export const createCardSchema = Joi.object({
     "any.required": "'columnId' value is required",
   }),
 });
+
+export const updateCardSchema = Joi.object({
+  title: Joi.string().min(1).max(50).messages({
+    "any.required": "'title' value is required",
+    "string.max": "Max. title length is 50 symbols",
+  }),
+  description: Joi.string().min(0).max(1000).messages({
+    "string.max": "Max. description length is 1000 symbols",
+  }),
+  priority: Joi.string().valid("low", "medium", "high", "without"),
+  deadline: Joi.date(),
+  columnId: Joi.string().messages({
+    "any.required": "'columnId' value is required",
+  }),
+}).min(1);
