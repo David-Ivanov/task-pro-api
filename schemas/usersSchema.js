@@ -11,3 +11,6 @@ export const createHelpSchema = Joi.object({
     email: Joi.string().email().min(3).required(),
     comment: Joi.string().min(5).required(),
 });
+
+
+export const createAvatarSchema = Joi.string().valid('image/jpeg', 'image/jpg', 'image/png', 'image/webp');
