@@ -4,7 +4,7 @@ import Column from "../../models/columnsModel.js";
 import { createColumnSchema } from "../../schemas/boardsSchemas.js";
 
 const createColumn = async (req, res) => {
-  const { error, value } = columnSchema.validate(req.body);
+  const { error, value } = createColumnSchema.validate(req.body);
 
   if (error) {
     return res.status(400).send({ message: error.message });
