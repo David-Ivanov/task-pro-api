@@ -40,11 +40,17 @@ export const changeBoardsBackgroundSchema = Joi.object({
   }),
 });
 
-export const columnSchema = Joi.object({
+export const createColumnSchema = Joi.object({
   title: Joi.string().required().messages({
     "any.required": "'title' value is required",
   }),
   boardId: Joi.string().required().messages({
     "any.required": "'boardId' value is required",
+  }),
+});
+
+export const updateColumnSchema = Joi.object({
+  title: Joi.string().required().messages({
+    "any.required": "'title' value is required",
   }),
 });

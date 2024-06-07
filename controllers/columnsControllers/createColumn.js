@@ -1,7 +1,7 @@
 import HttpError from "../../helpers/HttpError.js";
 import mongoose from "mongoose";
 import Column from "../../models/columnsModel.js";
-import { columnSchema } from "../../schemas/boardsSchemas.js";
+import { createColumnSchema } from "../../schemas/boardsSchemas.js";
 
 const createColumn = async (req, res) => {
   const { error, value } = columnSchema.validate(req.body);
