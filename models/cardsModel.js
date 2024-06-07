@@ -1,30 +1,32 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
-const board = new Schema(
-    {
-        title: {
-            type: String,
-            required: [true, "Title is required"],
-        },
-        description: {
-            type: String,
-            default: null,
-        },
-        priority: {
-            type: String,
-            enum: ["low", "medium", "high", "without"],
-            default: "without",
-        },
-        deadline: {
-            type: Date,
-        },
-        owner: {
-            type: Schema.Types.ObjectId,
-            ref: 'column',
-        },
+const card = new Schema(
+  {
+    title: {
+      type: String,
+      required: [true, "Title is required"],
     },
-    { versionKey: false }
+    description: {
+      type: String,
+      default: null,
+    },
+    priority: {
+      type: String,
+      enum: ["low", "medium", "high", "without"],
+      default: "without",
+    },
+    deadline: {
+      type: Date,
+      default: null,
+    },
+    columnId: {
+      type: Schema.Types.ObjectId,
+      ref: "Column",
+      required: [true, "Column id is required"],
+    },
+  },
+  { versionKey: false }
 );
 
-const Board = model('contact', board);
-export default Board;
+const Card = model("Card", card);
+export default Card;

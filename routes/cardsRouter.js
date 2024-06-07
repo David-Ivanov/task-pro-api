@@ -10,14 +10,14 @@ import updateCard from "../controllers/cardsControllers/updateCard.js";
 const cardsRouter = express.Router();
 const jsonParse = express.json();
 
-cardsRouter.get("/", auth, getAllCards);
+cardsRouter.get("/all/:columnId", auth, getAllCards);
 
-cardsRouter.get("/:id", auth, getCard);
+cardsRouter.get("/:cardId", auth, getCard);
 
-cardsRouter.delete("/:id", auth, deleteCard);
+cardsRouter.delete("/:cardId", auth, deleteCard);
 
 cardsRouter.post("/", auth, jsonParse, createCard);
 
-cardsRouter.put("/:id", auth, jsonParse, updateCard);
+cardsRouter.put("/:cardId", auth, jsonParse, updateCard);
 
 export default cardsRouter;

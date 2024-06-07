@@ -30,7 +30,7 @@ app.use(cors());
 
 app.use("/avatars", express.static(path.resolve("public/avatars")));
 app.use("/api/boards", boardsRouter);
-app.use("api/columns", columnsRouter);
+app.use("/api/columns", columnsRouter);
 app.use("/api/cards", cardsRouter);
 app.use("/api/users", userRouter, authRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

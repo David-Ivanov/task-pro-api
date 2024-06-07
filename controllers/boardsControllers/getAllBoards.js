@@ -1,4 +1,5 @@
 import Board from "../../models/boardsModel.js";
+import HttpError from "../../helpers/HttpError.js";
 
 const getAllBoards = async (req, res, next) => {
   try {
