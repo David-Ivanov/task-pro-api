@@ -18,7 +18,7 @@ const createBoard = async (req, res) => {
       owner: req.user._id,
     });
 
-    res.status(201).send({ data: board });
+    return res.status(201).send({ data: board });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }
