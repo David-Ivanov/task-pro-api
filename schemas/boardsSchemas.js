@@ -35,7 +35,16 @@ export const updateBoardSchema = Joi.object({
 
 export const changeBoardsBackgroundSchema = Joi.object({
   background: Joi.string().required().messages({
-    "any.required": "background value is required",
-    "string.base": "'title' must be string type",
+    "any.required": "'background' value is required",
+    "string.base": "'background' must be string type",
+  }),
+});
+
+export const columnSchema = Joi.object({
+  title: Joi.string().required().messages({
+    "any.required": "'title' value is required",
+  }),
+  boardId: Joi.string().required().messages({
+    "any.required": "'boardId' value is required",
   }),
 });
