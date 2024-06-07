@@ -5,6 +5,7 @@ import path from "node:path";
 import dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 import swaggerUi from "swagger-ui-express";
+import fs from "fs";
 
 import boardsRouter from "./routes/boardsRouter.js";
 import authRouter from "./routes/authRouter.js";

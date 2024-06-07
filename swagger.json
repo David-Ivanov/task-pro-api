@@ -1,0 +1,845 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Task Pro API",
+    "description": "API documentation for Task Pro",
+    "version": "1.0.0",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json", "multipart/form-data"],
+
+  "servers": [
+    {
+      "url": "https://task-pro-api-763i.onrender.com",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development server"
+    }
+  ],
+
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Endpoints related to user management"
+    },
+    {
+      "name": "User",
+      "description": "Endpoints related to user`s profile"
+    },
+    {
+      "name": "Boards",
+      "description": "Endpoints related to user`s boards"
+    },
+    {
+      "name": "Columns",
+      "description": "Endpoints related to columns of boards"
+    },
+    {
+      "name": "Cards",
+      "description": "Endpoints related to cards of columns"
+    }
+  ],
+
+  "paths": {
+    "api/users/register": {
+      "post": {
+        "summary": "Register a new user",
+        "description": "Registers a new user with email, password and name.",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
+    },
+    "api/users/login": {
+      "post": {
+        "summary": "Login a user",
+        "description": "Authenticates a user and returns a JWT token.",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User authenticated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid email or password"
+          }
+        }
+      }
+    },
+    "api/users/logout": {
+      "post": {
+        "summary": "Logout a user",
+        "description": "Logs out the user by invalidating the JWT token.",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "JWT token in the format 'Bearer {token}'",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User logged out successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing token"
+          }
+        }
+      }
+    },
+    "api/users/current": {
+      "get": {
+        "summary": "Get current user",
+        "description": "Gets the details of the currently authenticated user.",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current user details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing token"
+          }
+        }
+      }
+    },
+    "/user/edit": {
+      "patch": {
+        "summary": "Edit user profile",
+        "description": "Edits the profile of the currently authenticated user.",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/EditProfileRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditProfileResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing token"
+          }
+        }
+      }
+    },
+    "/user/theme": {
+      "patch": {
+        "summary": "Change user theme",
+        "description": "Changes the theme of the currently authenticated user.",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeThemeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Theme changed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeThemeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing token"
+          }
+        }
+      }
+    },
+    "/help": {
+      "put": {
+        "summary": "Request help",
+        "description": "Submits a help request for the currently authenticated user.",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HelpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Help request submitted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HelpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing token"
+          }
+        }
+      }
+    },
+    "/boards": {
+      "get": {
+        "summary": "Get all boards",
+        "tags": ["Boards"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of boards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Board"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new board",
+        "tags": ["Boards"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoardInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Board created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Board"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/boards/{id}": {
+      "get": {
+        "summary": "Get a specific board",
+        "tags": ["Boards"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Board data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Board"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Board not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a specific board",
+        "tags": ["Boards"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Board deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Board"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Board not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a specific board",
+        "tags": ["Boards"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoardInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Board updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Board"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Board not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Change board's background",
+        "tags": ["Boards"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBackgroundInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Board background updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Board"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Board not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          }
+        },
+        "required": ["email", "password", "name"]
+      },
+      "RegisterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  }
+                }
+              },
+              "token": {
+                "type": "string",
+                "example": "jwt-token"
+              }
+            }
+          }
+        }
+      },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "example": "user@example.com"
+              }
+            }
+          }
+        }
+      },
+      "EditProfileRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "newpassword123"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jane Doe"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "EditProfileResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Jane Doe"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ChangeThemeRequest": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": ["light", "dark", "violet"],
+            "example": "dark"
+          }
+        }
+      },
+      "ChangeThemeResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "theme": {
+                "type": "string",
+                "example": "dark"
+              }
+            }
+          }
+        }
+      },
+      "HelpRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "comment": {
+            "type": "string",
+            "example": "I need help with..."
+          }
+        },
+        "required": ["email", "comment"]
+      },
+      "HelpResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Help request submitted successfully"
+              }
+            }
+          }
+        }
+      },
+      "Board": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string",
+            "default": "default_background"
+          },
+          "icon": {
+            "type": "string",
+            "default": "default_icon"
+          },
+          "owner": {
+            "type": "string",
+            "format": "ObjectId"
+          }
+        }
+      },
+      "BoardInput": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string",
+            "default": "default_background",
+            "enum": ["background1", "background2", "background3"]
+          },
+          "icon": {
+            "type": "string",
+            "default": "default_icon",
+            "enum": ["icon1", "icon2", "icon3"]
+          }
+        }
+      },
+      "ChangeBackgroundInput": {
+        "type": "object",
+        "properties": {
+          "background": {
+            "type": "string",
+            "enum": ["background1", "background2", "background3"]
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
