@@ -41,8 +41,9 @@ export const changeBoardsBackgroundSchema = Joi.object({
 });
 
 export const createColumnSchema = Joi.object({
-  title: Joi.string().required().messages({
+  title: Joi.string().min(1).max(50).required().messages({
     "any.required": "'title' value is required",
+    "string.max": "Max. title length is 50 symbols",
   }),
   boardId: Joi.string().required().messages({
     "any.required": "'boardId' value is required",
@@ -52,5 +53,21 @@ export const createColumnSchema = Joi.object({
 export const updateColumnSchema = Joi.object({
   title: Joi.string().required().messages({
     "any.required": "'title' value is required",
+    "string.max": "Max. title length is 50 symbols",
+  }),
+});
+
+export const createCardSchema = Joi.object({
+  title: Joi.string().required().min(1).max(50).messages({
+    "any.required": "'title' value is required",
+    "string.max": "Max. title length is 50 symbols",
+  }),
+  description: Joi.string().min(0).max(1000).messages({
+    "string.max": "Max. description length is 1000 symbols",
+  }),
+  priority: Joi.string().valid("low", "medium", "high", "without"),
+  deadline: Joi.date(),
+  columnId: Joi.string().required().messages({
+    "any.required": "'columnId' value is required",
   }),
 });
