@@ -8,7 +8,6 @@ import updateBoard from "../controllers/boardsControllers/updateBoard.js";
 import changeBoardsBackground from "../controllers/boardsControllers/changeBoardsBackground.js";
 import getAllBoards from "../controllers/boardsControllers/getAllBoards.js";
 
-
 const boardsRouter = express.Router();
 const jsonParse = express.json();
 
@@ -22,6 +21,6 @@ boardsRouter.post("/", auth, jsonParse, createBoard);
 
 boardsRouter.put("/:id", auth, jsonParse, updateBoard);
 
-boardsRouter.patch("/:id", auth, changeBoardsBackground);
+boardsRouter.patch("/:id", auth, jsonParse, changeBoardsBackground);
 
 export default boardsRouter;
