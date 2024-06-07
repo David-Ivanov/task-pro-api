@@ -14,7 +14,7 @@ import cardsRouter from "./routes/cardsRouter.js";
 
 const app = express();
 
-const swaggerDocument = JSON.parse(fs.readFileSync("./swagger.json", "utf-8"));
+// const swaggerDocument = JSON.parse(fs.readFileSync("./swagger.json", "utf-8"));
 
 dotenv.config();
 const { CLOUDINARY_KEY, CLOUDINARY_SECRET } = process.env;
@@ -28,12 +28,11 @@ cloudinary.config({
 app.use(morgan("tiny"));
 app.use(cors());
 
-app.use("/avatars", express.static(path.resolve("public/avatars")));
 app.use("/api/boards", boardsRouter);
 app.use("/api/columns", columnsRouter);
 app.use("/api/cards", cardsRouter);
 app.use("/api/users", userRouter, authRouter);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });
