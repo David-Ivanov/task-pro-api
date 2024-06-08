@@ -36,7 +36,10 @@ const editProfile = async (req, res) => {
 
 
         // update avatar 
-        let result;
+        let result = {
+            avatarURL: user.avatarURL,
+            avatarId: user.avatarId,
+        };
         if (req.file) {
             result = await updateAvatar(req, res, data);
         }
