@@ -5,6 +5,7 @@ import path from "node:path";
 import dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 import swaggerUi from "swagger-ui-express";
+import fs from "fs";
 
 import boardsRouter from "./routes/boardsRouter.js";
 import authRouter from "./routes/authRouter.js";
@@ -14,7 +15,7 @@ import cardsRouter from "./routes/cardsRouter.js";
 
 const app = express();
 
-// const swaggerDocument = JSON.parse(fs.readFileSync("./swagger.json", "utf-8"));
+const swaggerDocument = JSON.parse(fs.readFileSync("./swagger.json", "utf-8"));
 
 dotenv.config();
 const { CLOUDINARY_KEY, CLOUDINARY_SECRET } = process.env;
@@ -32,7 +33,7 @@ app.use("/api/boards", boardsRouter);
 app.use("/api/columns", columnsRouter);
 app.use("/api/cards", cardsRouter);
 app.use("/api/users", userRouter, authRouter);
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });
