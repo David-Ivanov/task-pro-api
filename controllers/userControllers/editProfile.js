@@ -40,7 +40,7 @@ const editProfile = async (req, res) => {
         if (req.file) {
             result = await updateAvatar(req, res, data);
         }
-        
+
         // update user
         await User.findByIdAndUpdate(
             data.id,
@@ -53,7 +53,6 @@ const editProfile = async (req, res) => {
             },
             { new: true }
         );
-
 
         res.status(200).send({ data: { email, name, password, avatarURL: result.avatarURL } });
     } catch (err) {

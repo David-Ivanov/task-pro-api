@@ -15,7 +15,10 @@ const user = new Schema(
             type: String,
             required: [true, 'Name is required'],
         },
-        avatarURL: String,
+        avatarURL: {
+            type: String,
+            default: "https://res.cloudinary.com/daqlrgzqj/image/upload/v1717842472/avatars/darkUser.png"
+        },
         avatarId: {
             type: String,
             default: null,

@@ -2,7 +2,8 @@ import HttpError from "../../helpers/HttpError.js";
 import bcrypt from "bcrypt";
 import { createRegisterSchema } from "../../schemas/authSchemas.js";
 import User from "../../models/authModel.js"
-import gravatar from "gravatar";
+
+const avatarURL = "https://res.cloudinary.com/daqlrgzqj/image/upload/v1717842472/avatars/darkUser.png";
 
 const register = async (req, res) => {
     const { email, password, name } = req.body;
@@ -25,19 +26,16 @@ const register = async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // add avatar
-    const avatarURL = gravatar.url(email, { s: 250, d: "identicon" }, true);
-
     // create user
     const user = {
         email,
         name,
         password: passwordHash,
-        avatarURL,
+        avatarURL
     }
 
     await User.create(user);
-    res.status(201).send({ data: { user: { email, name } } });
+    res.status(201).send({ data: { user: { email, name, avatarURL } } });
 }
 
 export default register;

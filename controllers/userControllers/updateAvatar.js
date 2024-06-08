@@ -1,7 +1,6 @@
 import Jimp from "jimp";
 import HttpError from "../../helpers/HttpError.js";
 import User from "../../models/authModel.js"
-import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs/promises";
 import { createAvatarSchema } from "../../schemas/usersSchema.js";
