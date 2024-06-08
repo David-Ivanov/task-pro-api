@@ -3,6 +3,7 @@ import { createEditSchema } from "../../schemas/usersSchema.js";
 import HttpError from "../../helpers/HttpError.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import updateAvatar from "./updateAvatar.js";
 
 const editProfile = async (req, res) => {
     try {
@@ -24,7 +25,6 @@ const editProfile = async (req, res) => {
         if (!name) {
             name = user.name
         }
-
         if (!email) {
             email = user.email
         }
@@ -34,19 +34,33 @@ const editProfile = async (req, res) => {
             password = await bcrypt.hash(password, 10);
         }
 
+
+        // update avatar 
+        let result;
+        if (req.file) {
+            result = await updateAvatar(req, res, data);
+        }
+
+        console.log(result);
         // update user
         await User.findByIdAndUpdate(
             data.id,
-            { email, name, password },
+            {
+                email,
+                name,
+                password,
+                avatarURL: result.avatarURL,
+                avatarId: result.avatarId,
+            },
             { new: true }
         );
 
-        res.status(200).send({ email, name, password })
+
+        res.status(200).send({ data: { email, name, password, avatarURL: result.avatarURL } });
     } catch (err) {
         console.log(err);
         res.status(500).send({ message: HttpError(500).message })
     }
-
 }
 
 export default editProfile;

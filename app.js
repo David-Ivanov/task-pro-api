@@ -5,6 +5,7 @@ import path from "node:path";
 import dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 import swaggerUi from "swagger-ui-express";
+import fs from "fs";
 
 import boardsRouter from "./routes/boardsRouter.js";
 import authRouter from "./routes/authRouter.js";
@@ -28,9 +29,8 @@ cloudinary.config({
 app.use(morgan("tiny"));
 app.use(cors());
 
-app.use("/avatars", express.static(path.resolve("public/avatars")));
 app.use("/api/boards", boardsRouter);
-app.use("api/columns", columnsRouter);
+app.use("/api/columns", columnsRouter);
 app.use("/api/cards", cardsRouter);
 app.use("/api/users", userRouter, authRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
