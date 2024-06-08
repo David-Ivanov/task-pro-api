@@ -7,7 +7,7 @@ import fs from "fs/promises";
 import { createAvatarSchema } from "../../schemas/usersSchema.js";
 
 
-const updateAvatar = async (req, res) => {
+const updateAvatar = async (req, res, data) => {
     // errors are catching in authMiddleware.js
 
     try {
@@ -19,11 +19,6 @@ const updateAvatar = async (req, res) => {
         if (error) {
             return res.status(400).send({ message: HttpError(400, "Wrong format").message });
         }
-
-        // get token
-        const authorizationHeader = req.headers.authorization.split(" ");
-        const token = authorizationHeader[1];
-        const data = jwt.decode(token);
 
         // user already have avatar
         const findUser = await User.findById(data.id);
@@ -45,16 +40,7 @@ const updateAvatar = async (req, res) => {
 
         await fs.unlink(path);
 
-        const user = await User.findByIdAndUpdate(
-            data.id,
-            {
-                avatarURL: result.url,
-                avatarId: result.public_id,
-            },
-            { new: true }
-        );
-
-        return { avatarURL: user.avatarURL }
+        return { avatarURL: result.url, avatarId: result.public_id }
     } catch (error) {
         res.status(500).send({ message: HttpError(500).message });
     }
