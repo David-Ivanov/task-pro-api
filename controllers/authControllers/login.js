@@ -39,7 +39,7 @@ const login = async (req, res) => {
 
         const newUser = await User.findByIdAndUpdate({ _id: user._id }, { token });
 
-        res.status(200).send({ data: { user: { email: newUser.email, name: newUser.name, avatarURL: newUser.avatarURL }, token } });
+        res.status(200).send({ data: { user: { email: newUser.email, name: newUser.name, avatarURL: newUser.avatarURL, theme: newUser.theme }, token } });
     } catch (err) {
         res.status(401).send({ message: HttpError(401).message });
     }
