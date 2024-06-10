@@ -24,6 +24,10 @@ const card = new Schema(
       ref: "Column",
       required: [true, "Column id is required"],
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { versionKey: false }
 );
