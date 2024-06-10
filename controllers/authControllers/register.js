@@ -2,6 +2,11 @@ import HttpError from "../../helpers/HttpError.js";
 import bcrypt from "bcrypt";
 import { createRegisterSchema } from "../../schemas/authSchemas.js";
 import User from "../../models/authModel.js"
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
+const { JWT_SECRET } = process.env;
 
 const avatarURL = "https://res.cloudinary.com/daqlrgzqj/image/upload/v1717842472/avatars/darkUser.png";
 
@@ -26,6 +31,7 @@ const register = async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
+
     // create user
     const user = {
         email,
@@ -34,8 +40,18 @@ const register = async (req, res) => {
         avatarURL
     }
 
-    await User.create(user);
-    res.status(201).send({ data: { user: { email, name, avatarURL } } });
+    const createdUser = await User.create(user);
+
+    // create token
+
+    const payload = {
+        email,
+        password: passwordHash,
+        id: createdUser._id
+    }
+
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });
+    res.status(201).send({ data: { user: { email, name, avatarURL }, token } });
 }
 
 export default register;
