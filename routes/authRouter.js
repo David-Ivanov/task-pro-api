@@ -3,11 +3,13 @@ import auth from "../middleware/authMiddleware.js";
 import register from "../controllers/authControllers/register.js";
 import login from "../controllers/authControllers/login.js";
 import logout from "../controllers/authControllers/logout.js";
+import current from "../controllers/authControllers/current.js";
 
 const authRouter = express.Router();
 
 const jsonParse = express.json();
 
+authRouter.get("/current", current);
 authRouter.post("/register", jsonParse, register);
 authRouter.post("/login", jsonParse, login);
 authRouter.post("/logout", auth, logout);
