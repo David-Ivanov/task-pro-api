@@ -16,6 +16,7 @@ const createColumn = async (req, res) => {
     const column = await Column.create({
       title: value.title,
       boardId: value.boardId,
+      owner: req.user._id,
     });
 
     return res.status(201).send({ column });

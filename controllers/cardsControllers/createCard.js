@@ -13,7 +13,7 @@ const createCard = async (req, res) => {
   }
 
   try {
-    const card = await Card.create(value);
+    const card = await Card.create({ ...value, owner: req.user._id });
     return res.status(201).send({ card });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });

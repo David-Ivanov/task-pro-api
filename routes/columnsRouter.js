@@ -9,7 +9,7 @@ import updateColumn from "../controllers/columnsControllers/updateColumn.js";
 const columnsRouter = express.Router();
 const jsonParse = express.json();
 
-columnsRouter.get("/:boardId", auth, getAllColumns);
+columnsRouter.get("/", auth, getAllColumns);
 
 columnsRouter.delete("/:columnId", auth, deleteColumn);
 
