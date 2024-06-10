@@ -14,7 +14,7 @@ const getAllCards = async (req, res) => {
     //   return res.status(404).send({ message: HttpError(404).message });
     // }
 
-    return res.status(200).send({ data: cards });
+    return res.status(200).send({ cards });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }

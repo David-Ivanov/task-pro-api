@@ -17,7 +17,7 @@ const getBoard = async (req, res) => {
       return res.status(404).send({ message: HttpError(404).message });
     }
 
-    return res.status(200).send({ data: board });
+    return res.status(200).send({ board });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }

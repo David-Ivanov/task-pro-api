@@ -54,7 +54,7 @@ const register = async (req, res) => {
 
     await User.findOneAndUpdate({ email }, { token });
 
-    res.status(201).send({ data: { user: { email, name, avatarURL }, token } });
+    res.status(201).send({ user: { email, name, avatarURL }, token });
 }
 
 export default register;
