@@ -19,7 +19,7 @@ const deleteColumn = async (req, res) => {
 
     await Card.deleteMany({ columnId: req.params.columnId });
 
-    return res.status(200).send({ data: column });
+    return res.status(200).send({ column });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }

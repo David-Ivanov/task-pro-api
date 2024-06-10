@@ -16,7 +16,7 @@ const deleteCard = async (req, res) => {
       return res.status(404).send({ message: HttpError(404).message });
     }
 
-    return res.status(200).send({ data: card });
+    return res.status(200).send({ card });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }

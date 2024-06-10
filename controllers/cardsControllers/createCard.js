@@ -14,7 +14,7 @@ const createCard = async (req, res) => {
 
   try {
     const card = await Card.create(value);
-    return res.status(201).send({ data: card });
+    return res.status(201).send({ card });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }

@@ -57,7 +57,7 @@ const editProfile = async (req, res) => {
             { new: true }
         );
 
-        res.status(200).send({ data: { email, name, password, avatarURL: result.avatarURL } });
+        res.status(200).send({ email, name, password, avatarURL: result.avatarURL });
     } catch (err) {
         res.status(500).send({ message: HttpError(500).message })
     }

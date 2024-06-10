@@ -20,7 +20,7 @@ const deleteBoard = async (req, res) => {
 
     deleteBoardData(req.params.id);
 
-    return res.status(200).send({ data: board });
+    return res.status(200).send({ board });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }

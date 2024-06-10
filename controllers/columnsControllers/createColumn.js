@@ -18,7 +18,7 @@ const createColumn = async (req, res) => {
       boardId: value.boardId,
     });
 
-    return res.status(201).send({ data: column });
+    return res.status(201).send({ column });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }
