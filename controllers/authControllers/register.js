@@ -51,6 +51,9 @@ const register = async (req, res) => {
     }
 
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });
+
+    await User.findOneAndUpdate({ email }, { token });
+
     res.status(201).send({ data: { user: { email, name, avatarURL }, token } });
 }
 
