@@ -9,7 +9,7 @@ const getAllColumns = async (req, res) => {
 
   try {
     const columns = await Column.find({ owner: req.user._id });
-    return res.status(200).send({ columns });
+    return res.status(200).send({ ...columns });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }
