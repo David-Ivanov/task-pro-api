@@ -10,7 +10,7 @@ const getAllCards = async (req, res) => {
   try {
     const cards = await Card.find({ owner: req.user._id });
 
-    return res.status(200).send({ ...cards });
+    return res.status(200).send([ ...cards ]);
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }
