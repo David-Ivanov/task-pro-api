@@ -29,10 +29,6 @@
       "description": "Endpoints related to user management"
     },
     {
-      "name": "User",
-      "description": "Endpoints related to user`s profile"
-    },
-    {
       "name": "Boards",
       "description": "Endpoints related to user`s boards"
     },
@@ -47,10 +43,10 @@
   ],
 
   "paths": {
-    "api/users/register": {
+    "/api/users/register": {
       "post": {
         "summary": "Register a new user",
-        "description": "Registers a new user with email, password and name.",
+        "description": "Registers a new user with email, password and name",
         "tags": ["Users"],
         "requestBody": {
           "required": true,
@@ -82,7 +78,7 @@
         }
       }
     },
-    "api/users/login": {
+    "/api/users/login": {
       "post": {
         "summary": "Login a user",
         "description": "Authenticates a user and returns a JWT token.",
@@ -109,15 +105,15 @@
             }
           },
           "400": {
-            "description": "Invalid input data"
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized - Invalid email or password"
+            "description": "Email or password is wrong"
           }
         }
       }
     },
-    "api/users/logout": {
+    "/api/users/logout": {
       "post": {
         "summary": "Logout a user",
         "description": "Logs out the user by invalidating the JWT token.",
@@ -133,6 +129,11 @@
             }
           }
         ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "204": {
             "description": "User logged out successfully"
@@ -143,20 +144,24 @@
         }
       }
     },
-    "api/users/current": {
+    "/api/users/current": {
       "get": {
         "summary": "Get current user",
         "description": "Gets the details of the currently authenticated user.",
         "tags": ["Users"],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "JWT token",
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenRequest"
+              }
             }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
           }
         ],
         "responses": {
@@ -176,26 +181,25 @@
         }
       }
     },
-    "/user/edit": {
+    "/api/users/edit": {
       "patch": {
         "summary": "Edit user profile",
         "description": "Edits the profile of the currently authenticated user.",
-        "tags": ["User"],
-        "parameters": [
+        "tags": ["Users"],
+        "security": [
           {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "JWT token",
-            "schema": {
-              "type": "string"
-            }
+            "bearerAuth": []
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/EditProfileRequest"
+              }
+            },
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/EditProfileRequest"
               }
@@ -214,28 +218,36 @@
             }
           },
           "400": {
-            "description": "Invalid input data"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized - Invalid or missing token"
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/user/theme": {
+    "/api/users/theme": {
       "patch": {
         "summary": "Change user theme",
         "description": "Changes the theme of the currently authenticated user.",
-        "tags": ["User"],
-        "parameters": [
+        "tags": ["Users"],
+        "security": [
           {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "JWT token",
-            "schema": {
-              "type": "string"
-            }
+            "bearerAuth": []
           }
         ],
         "requestBody": {
@@ -260,19 +272,33 @@
             }
           },
           "400": {
-            "description": "Invalid input data"
+            "description": "Invalid input or user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized - Invalid or missing token"
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/help": {
+    "/api/users/help": {
       "put": {
         "summary": "Request help",
         "description": "Submits a help request for the currently authenticated user.",
-        "tags": ["User"],
+        "tags": ["Users"],
         "parameters": [
           {
             "name": "Authorization",
@@ -953,315 +979,354 @@
           }
         ]
       }
-    },
-    "components": {
-      "schemas": {
-        "RegisterRequest": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "format": "email",
-              "example": "user@example.com"
-            },
-            "password": {
-              "type": "string",
-              "example": "password123"
-            },
-            "name": {
-              "type": "string",
-              "example": "John Doe"
-            }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Vlad"
           },
-          "required": ["email", "password", "name"]
-        },
-        "RegisterResponse": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "object",
-              "properties": {
-                "user": {
-                  "type": "object",
-                  "properties": {
-                    "email": {
-                      "type": "string",
-                      "example": "user@example.com"
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "John Doe"
-                    }
-                  }
-                }
-              }
-            }
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "vlad@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "12345678"
           }
         },
-        "LoginRequest": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "format": "email",
-              "example": "user@example.com"
-            },
-            "password": {
-              "type": "string",
-              "example": "password123"
-            }
-          },
-          "required": ["email", "password"]
-        },
-        "LoginResponse": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "object",
-              "properties": {
-                "user": {
-                  "type": "object",
-                  "properties": {
-                    "email": {
-                      "type": "string",
-                      "example": "user@example.com"
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "John Doe"
-                    }
+        "required": ["email", "password", "name"]
+      },
+      "RegisterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "avatarURL": {
+                    "type": "string",
+                    "format": "uri"
                   }
                 },
-                "token": {
-                  "type": "string",
-                  "example": "jwt-token"
-                }
+                "required": ["name", "email", "avatarURL"]
+              },
+              "token": {
+                "type": "string",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
               }
-            }
+            },
+            "required": ["user", "token"]
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "vlad@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "12345678"
           }
         },
-        "CurrentUserResponse": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "example": "user@example.com"
-                }
-              }
-            }
-          }
-        },
-        "EditProfileRequest": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "format": "email",
-              "example": "user@example.com"
-            },
-            "password": {
-              "type": "string",
-              "example": "newpassword123"
-            },
-            "name": {
-              "type": "string",
-              "example": "Jane Doe"
-            },
-            "avatar": {
-              "type": "string",
-              "format": "binary"
-            }
-          }
-        },
-        "EditProfileResponse": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "object",
-              "properties": {
-                "user": {
-                  "type": "object",
-                  "properties": {
-                    "email": {
-                      "type": "string",
-                      "example": "user@example.com"
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "Jane Doe"
-                    }
+        "required": ["email", "password"]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "avatarURL": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "theme": {
+                    "type": "string",
+                    "example": "dark"
                   }
-                }
+                },
+                "required": ["name", "email", "avatarURL"]
+              },
+              "token": {
+                "type": "string",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
               }
-            }
+            },
+            "required": ["user", "token"]
           }
-        },
-        "ChangeThemeRequest": {
-          "type": "object",
-          "properties": {
-            "theme": {
-              "type": "string",
-              "enum": ["light", "dark", "violet"],
-              "example": "dark"
-            }
-          }
-        },
-        "ChangeThemeResponse": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "object",
-              "properties": {
-                "theme": {
-                  "type": "string",
-                  "example": "dark"
-                }
-              }
-            }
-          }
-        },
-        "HelpRequest": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "format": "email",
-              "example": "user@example.com"
-            },
-            "comment": {
-              "type": "string",
-              "example": "I need help with..."
-            }
-          },
-          "required": ["email", "comment"]
-        },
-        "HelpResponse": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string",
-                  "example": "Help request submitted successfully"
-                }
-              }
-            }
-          }
-        },
-        "Board": {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string"
-            },
-            "background": {
-              "type": "string",
-              "default": "default_background"
-            },
-            "icon": {
-              "type": "string",
-              "default": "default_icon"
-            },
-            "owner": {
-              "type": "string",
-              "format": "ObjectId"
-            }
-          }
-        },
-        "BoardInput": {
-          "type": "object",
-          "required": ["title"],
-          "properties": {
-            "title": {
-              "type": "string"
-            },
-            "background": {
-              "type": "string",
-              "default": "default_background",
-              "enum": ["background1", "background2", "background3"]
-            },
-            "icon": {
-              "type": "string",
-              "default": "default_icon",
-              "enum": ["icon1", "icon2", "icon3"]
-            }
-          }
-        },
-        "ChangeBackgroundInput": {
-          "type": "object",
-          "properties": {
-            "background": {
-              "type": "string",
-              "enum": ["background1", "background2", "background3"]
-            }
-          }
-        },
-        "Column": {
-          "type": "object",
-          "required": ["title"],
-          "properties": {
-            "title": {
-              "type": "string",
-              "description": "Title of the column"
-            },
-            "boardId": {
-              "type": "string",
-              "description": "ID of the board the column belongs to"
-            }
-          }
-        },
-        "ColumnArray": {
-          "type": "array",
-          "items": {
-            "$ref": "#/components/schemas/Column"
-          }
-        },
-        "Card": {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string",
-              "description": "Назва картки"
-            },
-            "description": {
-              "type": "string",
-              "description": "Опис картки"
-            },
-            "priority": {
-              "type": "string",
-              "enum": ["low", "medium", "high", "without"],
-              "description": "Пріоритет картки"
-            },
-            "deadline": {
-              "type": "string",
-              "format": "date-time",
-              "description": "Крайній термін"
-            },
-            "columnId": {
-              "type": "string",
-              "description": "Ідентифікатор колонки"
-            }
-          },
-          "required": ["title", "columnId"]
         }
       },
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
+      "TokenRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's authentication token"
+          }
+        },
+        "required": ["token"]
+      },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "example": "vladtest@mail.com"
+              }
+            }
+          }
         }
       },
-      "securitySchemesCard": {
-        "BearerAuth": {
-          "type": "apiKey",
-          "name": "Authorization",
-          "in": "header"
+      "EditProfileRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": []
+      },
+      "EditProfileResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "name": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "avatarURL": {
+                "type": "string",
+                "format": "url"
+              }
+            }
+          }
         }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+
+      "ChangeThemeRequest": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": ["light", "dark", "violet"]
+          }
+        },
+        "required": ["theme"]
+      },
+      "ChangeThemeResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "theme": {
+                "type": "string"
+              },
+              "avatarURL": {
+                "type": "string",
+                "format": "url"
+              }
+            }
+          }
+        }
+      },
+      "HelpRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "comment": {
+            "type": "string",
+            "example": "I need help with..."
+          }
+        },
+        "required": ["email", "comment"]
+      },
+      "HelpResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Help request submitted successfully"
+              }
+            }
+          }
+        }
+      },
+      "Board": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string",
+            "default": "default_background"
+          },
+          "icon": {
+            "type": "string",
+            "default": "default_icon"
+          },
+          "owner": {
+            "type": "string",
+            "format": "ObjectId"
+          }
+        }
+      },
+      "BoardInput": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string",
+            "default": "default_background",
+            "enum": ["background1", "background2", "background3"]
+          },
+          "icon": {
+            "type": "string",
+            "default": "default_icon",
+            "enum": ["icon1", "icon2", "icon3"]
+          }
+        }
+      },
+      "ChangeBackgroundInput": {
+        "type": "object",
+        "properties": {
+          "background": {
+            "type": "string",
+            "enum": ["background1", "background2", "background3"]
+          }
+        }
+      },
+      "Column": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the column"
+          },
+          "boardId": {
+            "type": "string",
+            "description": "ID of the board the column belongs to"
+          }
+        }
+      },
+      "ColumnArray": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Column"
+        }
+      },
+      "Card": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Назва картки"
+          },
+          "description": {
+            "type": "string",
+            "description": "Опис картки"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "without"],
+            "description": "Пріоритет картки"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Крайній термін"
+          },
+          "columnId": {
+            "type": "string",
+            "description": "Ідентифікатор колонки"
+          }
+        },
+        "required": ["title", "columnId"]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "securitySchemesCard": {
+      "BearerAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
       }
     }
   }
