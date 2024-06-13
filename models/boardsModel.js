@@ -7,7 +7,7 @@ const board = new Schema(
       required: [true, "Title is required"],
     },
     background: {
-      type: String,
+      type: String || null,
       default: null,
       // додати вичерпний перелік значень імен фонів, котрі можна передати.
       // в default записати значення стандартного фону
