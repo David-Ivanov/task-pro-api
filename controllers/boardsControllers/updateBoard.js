@@ -4,14 +4,12 @@ import mongoose from "mongoose";
 import HttpError from "../../helpers/HttpError.js";
 
 const updateBoard = async (req, res) => {
-  console.log(req.body);
+  
   const { error, value } = updateBoardSchema.validate(req.body);
-
-    console.log(error);
 
   // перевірка помилок валідації + корректності переданого ІД
   if (error) {
-    return res.status(400).send({ message: error.message, body: req.body, error, value });
+    return res.status(400).send({ message: error.message });
   } else if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(404).send({ message: HttpError(404).message });
   }
