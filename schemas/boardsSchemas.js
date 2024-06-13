@@ -23,7 +23,7 @@ export const updateBoardSchema = Joi.object({
     "string.min": "Min. title length is 1 symbol",
     "string.max": "Max. title length is 50 symbols",
   }),
-  background: Joi.string().trim().messages({
+  background: Joi.string().allow(null).trim().messages({
     "string.base": "'background' must be string type",
   }),
   icon: Joi.string().trim().messages({

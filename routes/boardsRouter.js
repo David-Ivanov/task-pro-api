@@ -21,6 +21,6 @@ boardsRouter.post("/", auth, jsonParse, createBoard);
 
 boardsRouter.patch("/:id", auth, jsonParse, updateBoard);
 
-boardsRouter.patch("/:id", auth, jsonParse, changeBoardsBackground);
+// boardsRouter.patch("/:id", auth, jsonParse, changeBoardsBackground);
 
 export default boardsRouter;
