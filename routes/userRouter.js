@@ -5,7 +5,8 @@ import changeTheme from "../controllers/userControllers/changeTheme.js";
 import needHelp from "../controllers/userControllers/needHelp.js";
 import multer from "multer";
 
-const upload = multer({ dest: 'tmp/' })
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const userRouter = express.Router();
 
