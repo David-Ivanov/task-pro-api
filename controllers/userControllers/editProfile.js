@@ -22,13 +22,13 @@ const editProfile = async (req, res) => {
         const data = jwt.decode(token);
 
         const user = await User.findById(data.id);
-        if (!name) {
+        if (!name || name === "") {
             name = user.name;
         }
-        if (!email) {
+        if (!email || email === "") {
             email = user.email;
         }
-        if (!password) {
+        if (!password || password === "") {
             password = user.password;
         } else {
             password = await bcrypt.hash(password, 10);
