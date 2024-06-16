@@ -66,7 +66,7 @@ export const createCardSchema = Joi.object({
     "string.max": "Max. description length is 1000 symbols",
   }),
   priority: Joi.string().valid("low", "medium", "high", "without"),
-  deadline: Joi.date(),
+  deadline: Joi.date().allow(null),
   columnId: Joi.string().required().messages({
     "any.required": "'columnId' value is required",
   }),
