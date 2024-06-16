@@ -16,7 +16,7 @@ const card = new Schema(
       default: "without",
     },
     deadline: {
-      type: Date,
+      type: [Schema.Types.Mixed],
       default: null,
     },
     columnId: {
