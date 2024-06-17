@@ -1079,6 +1079,18 @@
             "BearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "objectId",
+              "example": "6097e7c8f318a2001538e2c7"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -1110,6 +1122,188 @@
           },
           "500": {
             "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/cards/{cardId}": {
+      "get": {
+        "summary": "Get a card by ID",
+        "tags": ["Cards"],
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "objectId",
+              "example": "6097e7c8f318a2001538e2c7"
+            },
+            "description": "ID of the card"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCardResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Card not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "summary": "Delete a card by ID",
+        "tags": ["Cards"],
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "objectId",
+              "example": "6097e7c8f318a2001538e2c7"
+            },
+            "description": "ID of the card to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card successfully deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCardResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Card not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+
+      "put": {
+        "summary": "Update a card by ID",
+        "tags": ["Cards"],
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "objectId",
+              "example": "6097e7c8f318a2001538e2c7"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Card not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1303,6 +1497,33 @@
           },
           "deadline": {
             "type": "string",
+            "format": "date-time"
+          },
+          "columnId": {
+            "type": "string"
+          }
+        },
+        "required": ["title", "columnId"]
+      },
+      "UpdateCardRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "description": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 1000
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "without"]
+          },
+          "deadline": {
+            "type": ["string", "null"],
             "format": "date-time"
           },
           "columnId": {
@@ -1701,19 +1922,120 @@
           "owner": "5fd3c0e1577a1a1f240c7e99"
         }
       },
-
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
+      "GetCardResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the card",
+            "example": "Task A"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the card",
+            "default": null,
+            "example": "This is a description"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "without"],
+            "default": "without",
+            "description": "Priority of the card",
+            "example": "medium"
+          },
+          "deadline": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "default": null,
+            "description": "Deadline of the card (mixed type)"
+          },
+          "columnId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the column to which the card belongs",
+            "example": "60a78d33b30f0848481e7a4d"
+          },
+          "owner": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the user who owns the card (if applicable)",
+            "example": "60a78d33b30f0848481e7a4e"
+          }
         }
       },
-      "securitySchemesCard": {
-        "BearerAuth": {
-          "type": "apiKey",
-          "name": "Authorization",
-          "in": "header"
+      "DeleteCardResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the card",
+            "example": "Task ABC"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the card",
+            "example": "Detailed description of the task"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "without"],
+            "default": "without",
+            "description": "Priority level of the card"
+          },
+          "deadline": {
+            "type": "array",
+            "items": {},
+            "default": null,
+            "description": "Deadline for the card"
+          },
+          "columnId": {
+            "type": "string",
+            "description": "ID of the column to which the card belongs",
+            "example": "6123456789abcdef1234567"
+          },
+          "owner": {
+            "type": "string",
+            "description": "ID of the user who owns the card",
+            "example": "6123456789abcdef1234567"
+          }
+        }
+      },
+      "UpdateCardResponse": {
+        "type": "object",
+        "properties": {
+          "card": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "priority": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "without"]
+              },
+              "deadline": {
+                "type": ["string", "null"],
+                "format": "date-time"
+              },
+              "columnId": {
+                "type": "string"
+              },
+              "owner": {
+                "type": "string",
+                "format": "objectId",
+                "example": "6097e7c8f318a2001538e2c7"
+              }
+            },
+            "required": ["_id", "title", "columnId"]
+          }
         }
       }
     }
