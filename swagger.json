@@ -118,17 +118,6 @@
         "summary": "Logout a user",
         "description": "Logs out the user by invalidating the JWT token.",
         "tags": ["Users"],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "JWT token in the format 'Bearer {token}'",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "security": [
           {
             "bearerAuth": []
@@ -136,10 +125,10 @@
         ],
         "responses": {
           "204": {
-            "description": "User logged out successfully"
+            "description": "Successfully logged out"
           },
           "401": {
-            "description": "Unauthorized - Invalid or missing token"
+            "description": "Unauthorized"
           }
         }
       }
@@ -149,16 +138,6 @@
         "summary": "Get current user",
         "description": "Gets the details of the currently authenticated user.",
         "tags": ["Users"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TokenRequest"
-              }
-            }
-          }
-        },
         "security": [
           {
             "bearerAuth": []
@@ -198,11 +177,6 @@
               "schema": {
                 "$ref": "#/components/schemas/EditProfileRequest"
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditProfileRequest"
-              }
             }
           }
         },
@@ -218,21 +192,34 @@
             }
           },
           "400": {
-            "description": "Invalid input",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "500": {
-            "description": "Server error",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -299,15 +286,9 @@
         "summary": "Request help",
         "description": "Submits a help request for the currently authenticated user.",
         "tags": ["Users"],
-        "parameters": [
+        "security": [
           {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "JWT token",
-            "schema": {
-              "type": "string"
-            }
+            "bearerAuth": []
           }
         ],
         "requestBody": {
@@ -321,21 +302,28 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Help request submitted successfully",
+          "204": {
+            "description": "Success. Email sent successfully."
+          },
+          "400": {
+            "description": "Bad request. Missing or invalid parameters.",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HelpResponse"
+                "example": {
+                  "message": "Bad Request"
                 }
               }
             }
           },
-          "400": {
-            "description": "Invalid input data"
-          },
-          "401": {
-            "description": "Unauthorized - Invalid or missing token"
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Internal Server Error"
+                }
+              }
+            }
           }
         }
       }
@@ -1003,6 +991,53 @@
         },
         "required": ["email", "password", "name"]
       },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "vlad@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "12345678"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "EditProfileRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6
+          },
+          "avatarURL": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": []
+      },
+      "ChangeThemeRequest": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": ["light", "dark", "violet"]
+          }
+        },
+        "required": ["theme"]
+      },
+
       "RegisterResponse": {
         "type": "object",
         "properties": {
@@ -1024,30 +1059,11 @@
                   }
                 },
                 "required": ["name", "email", "avatarURL"]
-              },
-              "token": {
-                "type": "string",
-                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
               }
             },
-            "required": ["user", "token"]
+            "required": ["user"]
           }
         }
-      },
-      "LoginRequest": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "vlad@mail.com"
-          },
-          "password": {
-            "type": "string",
-            "example": "12345678"
-          }
-        },
-        "required": ["email", "password"]
       },
       "LoginResponse": {
         "type": "object",
@@ -1084,16 +1100,6 @@
           }
         }
       },
-      "TokenRequest": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "description": "User's authentication token"
-          }
-        },
-        "required": ["token"]
-      },
       "CurrentUserResponse": {
         "type": "object",
         "properties": {
@@ -1107,27 +1113,6 @@
             }
           }
         }
-      },
-      "EditProfileRequest": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "name": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string",
-            "format": "password"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "binary"
-          }
-        },
-        "required": []
       },
       "EditProfileResponse": {
         "type": "object",
@@ -1153,25 +1138,6 @@
           }
         }
       },
-      "ErrorResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          }
-        }
-      },
-
-      "ChangeThemeRequest": {
-        "type": "object",
-        "properties": {
-          "theme": {
-            "type": "string",
-            "enum": ["light", "dark", "violet"]
-          }
-        },
-        "required": ["theme"]
-      },
       "ChangeThemeResponse": {
         "type": "object",
         "properties": {
@@ -1189,6 +1155,7 @@
           }
         }
       },
+
       "HelpRequest": {
         "type": "object",
         "properties": {
@@ -1199,25 +1166,12 @@
           },
           "comment": {
             "type": "string",
-            "example": "I need help with..."
+            "example": "I need help with something."
           }
         },
         "required": ["email", "comment"]
       },
-      "HelpResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string",
-                "example": "Help request submitted successfully"
-              }
-            }
-          }
-        }
-      },
+
       "Board": {
         "type": "object",
         "properties": {
