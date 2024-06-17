@@ -123,6 +123,17 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "204": {
             "description": "Successfully logged out"
@@ -141,6 +152,17 @@
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -168,6 +190,17 @@
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -199,7 +232,8 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Bad request"
                     }
                   }
                 }
@@ -207,7 +241,20 @@
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unathorized"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
@@ -235,6 +282,17 @@
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -291,6 +349,17 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -334,7 +403,18 @@
         "tags": ["Boards"],
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -367,6 +447,17 @@
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -442,6 +533,15 @@
               "format": "uuid"
             },
             "description": "Board ID"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -505,6 +605,15 @@
               "format": "ObjectId"
             },
             "description": "ID of the board to delete"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -538,6 +647,15 @@
               "format": "objectId"
             },
             "description": "ID of the board to update"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -622,6 +740,15 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
             "schema": {
               "type": "string"
             }
@@ -710,6 +837,15 @@
               "type": "string"
             },
             "description": "ID of the board to get columns for"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -744,7 +880,18 @@
         "tags": ["Columns"],
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -823,6 +970,17 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of columns owned by the user",
@@ -859,6 +1017,15 @@
             "schema": {
               "type": "string",
               "description": "ID of the column to delete"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -919,6 +1086,15 @@
               "example": "6097e7c8f318a2001538e2c7"
             },
             "description": "ID of the column to update"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -997,7 +1173,18 @@
         "tags": ["Cards"],
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -1076,10 +1263,19 @@
         "tags": ["Cards"],
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
           }
         ],
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "cardId",
             "in": "path",
@@ -1091,6 +1287,7 @@
             }
           }
         ],
+
         "responses": {
           "200": {
             "description": "Successful response",
@@ -1323,6 +1520,16 @@
   },
 
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Enter JWT"
+      }
+    },
     "schemas": {
       "RegisterRequest": {
         "type": "object",
@@ -1364,18 +1571,23 @@
         "properties": {
           "email": {
             "type": "string",
-            "format": "email"
+            "format": "email",
+            "example": "columnscards@test.com"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "example": "Vlad"
           },
           "password": {
             "type": "string",
-            "minLength": 6
+            "minLength": 6,
+            "example": "12345678"
           },
-          "avatarURL": {
+          "avatar": {
             "type": "string",
-            "format": "binary"
+            "format": "binary",
+            "example": "(binary)",
+            "description": "User's profile picture file"
           }
         },
         "required": []
@@ -1617,17 +1829,18 @@
             "properties": {
               "email": {
                 "type": "string",
-                "format": "email"
+                "format": "email",
+                "example": "columnscards@test.com"
               },
               "name": {
-                "type": "string"
+                "type": "string",
+                "example": "Vlad"
               },
-              "password": {
-                "type": "string"
-              },
+
               "avatarURL": {
                 "type": "string",
-                "format": "url"
+                "format": "url",
+                "example": "http://res.cloudinary.com/daqlrgzqj/image/upload/v1718476036/avatars/t7axgw8iupoavdq24nwq.jpg"
               }
             }
           }
