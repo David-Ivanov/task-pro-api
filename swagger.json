@@ -123,6 +123,17 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "204": {
             "description": "Successfully logged out"
@@ -141,6 +152,17 @@
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -168,6 +190,17 @@
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -199,7 +232,8 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Bad request"
                     }
                   }
                 }
@@ -207,7 +241,20 @@
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unathorized"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
@@ -235,6 +282,17 @@
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -291,6 +349,17 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -334,7 +403,18 @@
         "tags": ["Boards"],
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -367,6 +447,17 @@
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -442,6 +533,15 @@
               "format": "uuid"
             },
             "description": "Board ID"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -505,6 +605,15 @@
               "format": "ObjectId"
             },
             "description": "ID of the board to delete"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -538,6 +647,15 @@
               "format": "objectId"
             },
             "description": "ID of the board to update"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -622,6 +740,15 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
             "schema": {
               "type": "string"
             }
@@ -710,6 +837,15 @@
               "type": "string"
             },
             "description": "ID of the board to get columns for"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -737,104 +873,25 @@
         ]
       }
     },
-    "/api/columns/{columnId}": {
-      "delete": {
-        "summary": "Delete a column by ID",
-        "tags": ["Columns"],
-        "parameters": [
-          {
-            "name": "columnId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "ID of the column to delete"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Column deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Column"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Column not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        },
-        "security": [
-          {
-            "auth": []
-          }
-        ]
-      },
-      "put": {
-        "summary": "Update a column by ID",
-        "tags": ["Columns"],
-        "parameters": [
-          {
-            "name": "columnId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "ID of the column to update"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Column"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Column updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Column"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input"
-          },
-          "404": {
-            "description": "Column not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        },
-        "security": [
-          {
-            "auth": []
-          }
-        ]
-      }
-    },
+
     "/api/columns": {
       "post": {
         "summary": "Create a new column",
         "tags": ["Columns"],
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -904,208 +961,575 @@
             }
           }
         }
+      },
+      "get": {
+        "summary": "Get all columns owned by the authenticated user",
+        "tags": ["Columns"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of columns owned by the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAllColumnsResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: Invalid or missing authentication token"
+          },
+          "500": {
+            "description": "Internal Server Error: Failed to retrieve columns"
+          }
+        }
       }
     },
-    "api/all/{columnId}": {
-      "get": {
-        "tags": ["Cards"],
-        "summary": "Отримати всі картки за ідентифікатором колонки",
+
+    "/api/columns/{columnId}": {
+      "delete": {
+        "summary": "Delete a column by ID",
+        "tags": ["Columns"],
         "parameters": [
           {
             "name": "columnId",
             "in": "path",
             "required": true,
             "schema": {
+              "type": "string",
+              "description": "ID of the column to delete"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
               "type": "string"
-            },
-            "description": "Ідентифікатор колонки"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Успішно отримано картки",
+            "description": "Column deleted successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Card" }
+                  "$ref": "#/components/schemas/DeleteColumnResponse"
                 }
               }
             }
           },
           "404": {
-            "description": "Картки не знайдено"
-          },
-          "500": {
-            "description": "Внутрішня помилка сервера"
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/cards/{cardId}": {
-      "get": {
-        "tags": ["Cards"],
-        "summary": "Отримати картку за ідентифікатором",
-        "parameters": [
-          {
-            "name": "cardId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Ідентифікатор картки"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Успішно отримано картку",
+            "description": "Column not found",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Card" }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             }
           },
-          "404": {
-            "description": "Картку не знайдено"
-          },
           "500": {
-            "description": "Внутрішня помилка сервера"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": ["Cards"],
-        "summary": "Видалити картку за ідентифікатором",
-        "parameters": [
-          {
-            "name": "cardId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Ідентифікатор картки"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Успішно видалено картку"
-          },
-          "404": {
-            "description": "Картку не знайдено"
-          },
-          "500": {
-            "description": "Внутрішня помилка сервера"
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       },
       "put": {
+        "summary": "Update a column by ID",
+        "tags": ["Columns"],
+        "parameters": [
+          {
+            "name": "columnId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "objectId",
+              "example": "6097e7c8f318a2001538e2c7"
+            },
+            "description": "ID of the column to update"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ColumnUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ColumnUpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Column not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/cards": {
+      "post": {
+        "summary": "Create a new card",
         "tags": ["Cards"],
-        "summary": "Оновити картку за ідентифікатором",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/cards/all": {
+      "get": {
+        "summary": "Get all cards owned by the authenticated user",
+        "tags": ["Cards"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "objectId",
+              "example": "6097e7c8f318a2001538e2c7"
+            }
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAllCardsResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User ID not valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/cards/{cardId}": {
+      "get": {
+        "summary": "Get a card by ID",
+        "tags": ["Cards"],
         "parameters": [
           {
             "name": "cardId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "objectId",
+              "example": "6097e7c8f318a2001538e2c7"
             },
-            "description": "Ідентифікатор картки"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Card" }
-              }
-            }
+            "description": "ID of the card"
           }
         ],
         "responses": {
           "200": {
-            "description": "Успішно оновлено картку",
+            "description": "Successful response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Card" }
+                "schema": {
+                  "$ref": "#/components/schemas/GetCardResponse"
+                }
               }
             }
-          },
-          "400": {
-            "description": "Неправильний запит"
           },
           "404": {
-            "description": "Картку не знайдено"
-          },
-          "500": {
-            "description": "Внутрішня помилка сервера"
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/cards": {
-      "post": {
-        "tags": ["Cards"],
-        "summary": "Create new card",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
+            "description": "Card not found",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Card" }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "summary": "Delete a card by ID",
+        "tags": ["Cards"],
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "objectId",
+              "example": "6097e7c8f318a2001538e2c7"
+            },
+            "description": "ID of the card to delete"
           }
         ],
         "responses": {
-          "201": {
-            "description": "Access card created",
+          "200": {
+            "description": "Card successfully deleted",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Card" }
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCardResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Card not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+
+      "put": {
+        "summary": "Update a card by ID",
+        "tags": ["Cards"],
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "objectId",
+              "example": "6097e7c8f318a2001538e2c7"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCardResponse"
+                }
               }
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Card not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     }
   },
+
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Enter JWT"
+      }
+    },
     "schemas": {
       "RegisterRequest": {
         "type": "object",
@@ -1147,18 +1571,23 @@
         "properties": {
           "email": {
             "type": "string",
-            "format": "email"
+            "format": "email",
+            "example": "columnscards@test.com"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "example": "Vlad"
           },
           "password": {
             "type": "string",
-            "minLength": 6
+            "minLength": 6,
+            "example": "12345678"
           },
-          "avatarURL": {
+          "avatar": {
             "type": "string",
-            "format": "binary"
+            "format": "binary",
+            "example": "(binary)",
+            "description": "User's profile picture file"
           }
         },
         "required": []
@@ -1245,6 +1674,76 @@
         },
         "required": ["title", "boardId"]
       },
+      "ColumnUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "boardId": {
+            "type": "string",
+            "format": "objectId"
+          },
+          "owner": {
+            "type": "string",
+            "format": "objectId"
+          }
+        },
+        "required": ["title"]
+      },
+      "CreateCardRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "without"]
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "columnId": {
+            "type": "string"
+          }
+        },
+        "required": ["title", "columnId"]
+      },
+      "UpdateCardRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "description": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 1000
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "without"]
+          },
+          "deadline": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "columnId": {
+            "type": "string"
+          }
+        },
+        "required": ["title", "columnId"]
+      },
 
       "RegisterResponse": {
         "type": "object",
@@ -1330,17 +1829,18 @@
             "properties": {
               "email": {
                 "type": "string",
-                "format": "email"
+                "format": "email",
+                "example": "columnscards@test.com"
               },
               "name": {
-                "type": "string"
+                "type": "string",
+                "example": "Vlad"
               },
-              "password": {
-                "type": "string"
-              },
+
               "avatarURL": {
                 "type": "string",
-                "format": "url"
+                "format": "url",
+                "example": "http://res.cloudinary.com/daqlrgzqj/image/upload/v1718476036/avatars/t7axgw8iupoavdq24nwq.jpg"
               }
             }
           }
@@ -1489,77 +1989,267 @@
           }
         }
       },
-
-      "ChangeBackgroundInput": {
+      "GetAllColumnsResponse": {
         "type": "object",
         "properties": {
-          "background": {
+          "_id": {
             "type": "string",
-            "enum": ["background1", "background2", "background3"]
+            "description": "Unique identifier for the column"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the column"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Owner of the column"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the column was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the column was last updated"
           }
         }
       },
-      "Column": {
+
+      "DeleteColumnResponse": {
         "type": "object",
-        "required": ["title"],
         "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID of the column"
+          },
           "title": {
             "type": "string",
-            "description": "Title of the column"
+            "description": "Title of the column",
+            "example": "To Do"
           },
           "boardId": {
             "type": "string",
-            "description": "ID of the board the column belongs to"
+            "description": "ID of the board to which the column belongs"
+          },
+          "owner": {
+            "type": "string",
+            "description": "ID of the user who owns the column"
           }
         }
       },
-      "ColumnArray": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Column"
+      "ColumnUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "objectId"
+          },
+          "title": {
+            "type": "string"
+          },
+          "boardId": {
+            "type": "string",
+            "format": "objectId"
+          },
+          "owner": {
+            "type": "string",
+            "format": "objectId"
+          }
         }
       },
-      "Card": {
+      "CreateCardResponse": {
+        "type": "object",
+        "properties": {
+          "card": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "priority": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "without"]
+              },
+              "deadline": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "columnId": {
+                "type": "string"
+              },
+              "owner": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "GetAllCardsResponse": {
         "type": "object",
         "properties": {
           "title": {
             "type": "string",
-            "description": "Card`s name"
+            "description": "Title of the card",
+            "example": "Task A"
           },
           "description": {
             "type": "string",
-            "description": "Card`s description"
+            "description": "Description of the card",
+            "example": "This is a task that needs to be completed."
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "all"],
+            "default": "all",
+            "description": "Priority level of the card"
+          },
+          "deadline": {
+            "type": "array",
+            "items": {},
+            "default": null,
+            "description": "Deadline for the card"
+          },
+          "columnId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the column where the card belongs"
+          },
+          "owner": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the owner (user) of the card"
+          }
+        },
+        "required": ["title", "columnId"],
+        "example": {
+          "title": "Task A",
+          "description": "This is a task that needs to be completed.",
+          "priority": "medium",
+          "deadline": null,
+          "columnId": "5fd3c0e1577a1a1f240c7ea1",
+          "owner": "5fd3c0e1577a1a1f240c7e99"
+        }
+      },
+      "GetCardResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the card",
+            "example": "Task A"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the card",
+            "default": null,
+            "example": "This is a description"
           },
           "priority": {
             "type": "string",
             "enum": ["low", "medium", "high", "without"],
-            "description": "Card`s priority"
+            "default": "without",
+            "description": "Priority of the card",
+            "example": "medium"
           },
           "deadline": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Date of deadline"
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "default": null,
+            "description": "Deadline of the card (mixed type)"
           },
           "columnId": {
             "type": "string",
-            "description": "Column ID"
+            "format": "uuid",
+            "description": "ID of the column to which the card belongs",
+            "example": "60a78d33b30f0848481e7a4d"
+          },
+          "owner": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the user who owns the card (if applicable)",
+            "example": "60a78d33b30f0848481e7a4e"
           }
-        },
-        "required": ["title", "columnId"]
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "securitySchemesCard": {
-      "BearerAuth": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header"
+        }
+      },
+      "DeleteCardResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the card",
+            "example": "Task ABC"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the card",
+            "example": "Detailed description of the task"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "without"],
+            "default": "without",
+            "description": "Priority level of the card"
+          },
+          "deadline": {
+            "type": "array",
+            "items": {},
+            "default": null,
+            "description": "Deadline for the card"
+          },
+          "columnId": {
+            "type": "string",
+            "description": "ID of the column to which the card belongs",
+            "example": "6123456789abcdef1234567"
+          },
+          "owner": {
+            "type": "string",
+            "description": "ID of the user who owns the card",
+            "example": "6123456789abcdef1234567"
+          }
+        }
+      },
+      "UpdateCardResponse": {
+        "type": "object",
+        "properties": {
+          "card": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "priority": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "without"]
+              },
+              "deadline": {
+                "type": ["string", "null"],
+                "format": "date-time"
+              },
+              "columnId": {
+                "type": "string"
+              },
+              "owner": {
+                "type": "string",
+                "format": "objectId",
+                "example": "6097e7c8f318a2001538e2c7"
+              }
+            },
+            "required": ["_id", "title", "columnId"]
+          }
+        }
       }
     }
   }
