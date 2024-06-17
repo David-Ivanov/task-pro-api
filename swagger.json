@@ -1064,93 +1064,278 @@
           ]
         }
       }
-    },
-    "components": {
-      "schemas": {
-        "RegisterRequest": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "example": "Vlad"
-            },
-            "email": {
-              "type": "string",
-              "format": "email",
-              "example": "vlad@mail.com"
-            },
-            "password": {
-              "type": "string",
-              "format": "password",
-              "example": "12345678"
-            }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Vlad"
           },
-          "required": ["email", "password", "name"]
-        },
-        "LoginRequest": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "format": "email",
-              "example": "vlad@mail.com"
-            },
-            "password": {
-              "type": "string",
-              "example": "12345678"
-            }
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "vlad@mail.com"
           },
-          "required": ["email", "password"]
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "12345678"
+          }
         },
-        "EditProfileRequest": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "format": "email"
-            },
-            "name": {
-              "type": "string"
-            },
-            "password": {
-              "type": "string",
-              "minLength": 6
-            },
-            "avatarURL": {
-              "type": "string",
-              "format": "binary"
-            }
+        "required": ["email", "password", "name"]
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "vlad@mail.com"
           },
-          "required": []
+          "password": {
+            "type": "string",
+            "example": "12345678"
+          }
         },
-        "ChangeThemeRequest": {
-          "type": "object",
-          "properties": {
-            "theme": {
-              "type": "string",
-              "enum": ["light", "dark", "violet"]
-            }
+        "required": ["email", "password"]
+      },
+      "EditProfileRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
           },
-          "required": ["theme"]
+          "name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6
+          },
+          "avatarURL": {
+            "type": "string",
+            "format": "binary"
+          }
         },
-        "HelpRequest": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "format": "email",
-              "example": "user@example.com"
+        "required": []
+      },
+      "ChangeThemeRequest": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": ["light", "dark", "violet"]
+          }
+        },
+        "required": ["theme"]
+      },
+      "HelpRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "comment": {
+            "type": "string",
+            "example": "I need help with something."
+          }
+        },
+        "required": ["email", "comment"]
+      },
+      "CreateBoardRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "My Board"
+          },
+          "background": {
+            "type": "string",
+            "example": "#FFFFFF"
+          },
+          "icon": {
+            "type": "string",
+            "example": "fa-star"
+          }
+        },
+        "required": ["title"]
+      },
+      "UpdateBoardRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "background": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          }
+        }
+      },
+      "ChangeBoardsBackgroundRequest": {
+        "type": "object",
+        "properties": {
+          "background": {
+            "type": "string"
+          }
+        },
+        "required": ["background"]
+      },
+
+      "RegisterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "avatarURL": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                },
+                "required": ["name", "email", "avatarURL"]
+              }
             },
-            "comment": {
-              "type": "string",
-              "example": "I need help with something."
+            "required": ["user"]
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "avatarURL": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "theme": {
+                    "type": "string",
+                    "example": "dark"
+                  }
+                },
+                "required": ["name", "email", "avatarURL"]
+              },
+              "token": {
+                "type": "string",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+              }
+            },
+            "required": ["user", "token"]
+          }
+        }
+      },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "example": "vladtest@mail.com"
+              }
             }
+          }
+        }
+      },
+      "EditProfileResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "name": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "avatarURL": {
+                "type": "string",
+                "format": "url"
+              }
+            }
+          }
+        }
+      },
+      "ChangeThemeResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "theme": {
+                "type": "string"
+              },
+              "avatarURL": {
+                "type": "string",
+                "format": "url"
+              }
+            }
+          }
+        }
+      },
+      "AllBoardResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Board ID"
           },
-          "required": ["email", "comment"]
-        },
-        "CreateBoardRequest": {
+          "name": {
+            "type": "string",
+            "description": "Board name"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Owner ID"
+          }
+        }
+      },
+      "CreateBoardResponse": {
+        "type": "object",
+        "properties": {
           "type": "object",
           "properties": {
+            "_id": {
+              "type": "string",
+              "example": "6123456789abcdef01234567"
+            },
             "title": {
               "type": "string",
               "example": "My Board"
@@ -1162,334 +1347,149 @@
             "icon": {
               "type": "string",
               "example": "fa-star"
-            }
-          },
-          "required": ["title"]
-        },
-        "UpdateBoardRequest": {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 50
-            },
-            "background": {
-              "type": "string"
-            },
-            "icon": {
-              "type": "string"
-            }
-          }
-        },
-        "ChangeBoardsBackgroundRequest": {
-          "type": "object",
-          "properties": {
-            "background": {
-              "type": "string"
-            }
-          },
-          "required": ["background"]
-        },
-
-        "RegisterResponse": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "object",
-              "properties": {
-                "user": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "avatarURL": {
-                      "type": "string",
-                      "format": "uri"
-                    }
-                  },
-                  "required": ["name", "email", "avatarURL"]
-                }
-              },
-              "required": ["user"]
-            }
-          }
-        },
-        "LoginResponse": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "object",
-              "properties": {
-                "user": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "avatarURL": {
-                      "type": "string",
-                      "format": "uri"
-                    },
-                    "theme": {
-                      "type": "string",
-                      "example": "dark"
-                    }
-                  },
-                  "required": ["name", "email", "avatarURL"]
-                },
-                "token": {
-                  "type": "string",
-                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                }
-              },
-              "required": ["user", "token"]
-            }
-          }
-        },
-        "CurrentUserResponse": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "example": "vladtest@mail.com"
-                }
-              }
-            }
-          }
-        },
-        "EditProfileResponse": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "format": "email"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "password": {
-                  "type": "string"
-                },
-                "avatarURL": {
-                  "type": "string",
-                  "format": "url"
-                }
-              }
-            }
-          }
-        },
-        "ChangeThemeResponse": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "object",
-              "properties": {
-                "theme": {
-                  "type": "string"
-                },
-                "avatarURL": {
-                  "type": "string",
-                  "format": "url"
-                }
-              }
-            }
-          }
-        },
-        "AllBoardResponse": {
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string",
-              "description": "Board ID"
-            },
-            "name": {
-              "type": "string",
-              "description": "Board name"
             },
             "owner": {
               "type": "string",
-              "description": "Owner ID"
+              "example": "6123456789abcdef01234567"
             }
           }
-        },
-        "CreateBoardResponse": {
-          "type": "object",
-          "properties": {
-            "type": "object",
-            "properties": {
-              "_id": {
-                "type": "string",
-                "example": "6123456789abcdef01234567"
-              },
-              "title": {
-                "type": "string",
-                "example": "My Board"
-              },
-              "background": {
-                "type": "string",
-                "example": "#FFFFFF"
-              },
-              "icon": {
-                "type": "string",
-                "example": "fa-star"
-              },
-              "owner": {
-                "type": "string",
-                "example": "6123456789abcdef01234567"
-              }
-            }
-          }
-        },
-        "GetBoardByIdResponse": {
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "name": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "createdAt": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "updatedAt": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        },
-        "UpdateBoardResponse": {
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string",
-              "format": "objectId"
-            },
-            "title": {
-              "type": "string"
-            },
-            "background": {
-              "type": "string"
-            },
-            "icon": {
-              "type": "string"
-            }
-          }
-        },
-        "ChangeBoardsBackgroundResponse": {
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string",
-              "format": "ObjectId"
-            },
-            "title": {
-              "type": "string"
-            },
-            "background": {
-              "type": "string"
-            },
-            "icon": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string",
-              "format": "ObjectId"
-            }
-          }
-        },
-
-        "ChangeBackgroundInput": {
-          "type": "object",
-          "properties": {
-            "background": {
-              "type": "string",
-              "enum": ["background1", "background2", "background3"]
-            }
-          }
-        },
-        "Column": {
-          "type": "object",
-          "required": ["title"],
-          "properties": {
-            "title": {
-              "type": "string",
-              "description": "Title of the column"
-            },
-            "boardId": {
-              "type": "string",
-              "description": "ID of the board the column belongs to"
-            }
-          }
-        },
-        "ColumnArray": {
-          "type": "array",
-          "items": {
-            "$ref": "#/components/schemas/Column"
-          }
-        },
-        "Card": {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string",
-              "description": "Card`s name"
-            },
-            "description": {
-              "type": "string",
-              "description": "Card`s description"
-            },
-            "priority": {
-              "type": "string",
-              "enum": ["low", "medium", "high", "without"],
-              "description": "Card`s priority"
-            },
-            "deadline": {
-              "type": "string",
-              "format": "date-time",
-              "description": "Date of deadline"
-            },
-            "columnId": {
-              "type": "string",
-              "description": "Column ID"
-            }
-          },
-          "required": ["title", "columnId"]
         }
       },
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
+      "GetBoardByIdResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
-      "securitySchemesCard": {
-        "BearerAuth": {
-          "type": "apiKey",
-          "name": "Authorization",
-          "in": "header"
+      "UpdateBoardResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "objectId"
+          },
+          "title": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          }
         }
+      },
+      "ChangeBoardsBackgroundResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "ObjectId"
+          },
+          "title": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string",
+            "format": "ObjectId"
+          }
+        }
+      },
+
+      "ChangeBackgroundInput": {
+        "type": "object",
+        "properties": {
+          "background": {
+            "type": "string",
+            "enum": ["background1", "background2", "background3"]
+          }
+        }
+      },
+      "Column": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the column"
+          },
+          "boardId": {
+            "type": "string",
+            "description": "ID of the board the column belongs to"
+          }
+        }
+      },
+      "ColumnArray": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Column"
+        }
+      },
+      "Card": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Card`s name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Card`s description"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "without"],
+            "description": "Card`s priority"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of deadline"
+          },
+          "columnId": {
+            "type": "string",
+            "description": "Column ID"
+          }
+        },
+        "required": ["title", "columnId"]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "securitySchemesCard": {
+      "BearerAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
       }
     }
   }
