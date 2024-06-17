@@ -118,17 +118,6 @@
         "summary": "Logout a user",
         "description": "Logs out the user by invalidating the JWT token.",
         "tags": ["Users"],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "JWT token in the format 'Bearer {token}'",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "security": [
           {
             "bearerAuth": []
@@ -136,10 +125,10 @@
         ],
         "responses": {
           "204": {
-            "description": "User logged out successfully"
+            "description": "Successfully logged out"
           },
           "401": {
-            "description": "Unauthorized - Invalid or missing token"
+            "description": "Unauthorized"
           }
         }
       }
@@ -149,16 +138,6 @@
         "summary": "Get current user",
         "description": "Gets the details of the currently authenticated user.",
         "tags": ["Users"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TokenRequest"
-              }
-            }
-          }
-        },
         "security": [
           {
             "bearerAuth": []
@@ -198,11 +177,6 @@
               "schema": {
                 "$ref": "#/components/schemas/EditProfileRequest"
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditProfileRequest"
-              }
             }
           }
         },
@@ -218,21 +192,34 @@
             }
           },
           "400": {
-            "description": "Invalid input",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "500": {
-            "description": "Server error",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -299,15 +286,9 @@
         "summary": "Request help",
         "description": "Submits a help request for the currently authenticated user.",
         "tags": ["Users"],
-        "parameters": [
+        "security": [
           {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "JWT token",
-            "schema": {
-              "type": "string"
-            }
+            "bearerAuth": []
           }
         ],
         "requestBody": {
@@ -321,32 +302,39 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Help request submitted successfully",
+          "204": {
+            "description": "Success. Email sent successfully."
+          },
+          "400": {
+            "description": "Bad request. Missing or invalid parameters.",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HelpResponse"
+                "example": {
+                  "message": "Bad Request"
                 }
               }
             }
           },
-          "400": {
-            "description": "Invalid input data"
-          },
-          "401": {
-            "description": "Unauthorized - Invalid or missing token"
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Internal Server Error"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/boards": {
+    "/api/boards": {
       "get": {
         "summary": "Get all boards",
         "tags": ["Boards"],
         "security": [
           {
-            "bearerAuth": []
+            "BearerAuth": []
           }
         ],
         "responses": {
@@ -360,7 +348,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Board"
+                        "$ref": "#/components/schemas/AllBoardResponse"
                       }
                     }
                   }
@@ -386,39 +374,58 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BoardInput"
+                "$ref": "#/components/schemas/CreateBoardRequest"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Board created",
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Board"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CreateBoardResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/boards/{id}": {
+    "/api/boards/{id}": {
       "get": {
-        "summary": "Get a specific board",
+        "summary": "Get board by ID",
         "tags": ["Boards"],
         "security": [
           {
@@ -431,20 +438,22 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Board ID"
           }
         ],
         "responses": {
           "200": {
-            "description": "Board data",
+            "description": "Board found",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Board"
+                      "$ref": "#/components/schemas/GetBoardByIdResponse"
                     }
                   }
                 }
@@ -452,71 +461,83 @@
             }
           },
           "404": {
-            "description": "Board not found"
+            "description": "Board not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
       "delete": {
-        "summary": "Delete a specific board",
         "tags": ["Boards"],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "summary": "Delete a board by ID",
         "parameters": [
           {
-            "name": "id",
             "in": "path",
+            "name": "id",
             "required": true,
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "ID of the board to delete"
           }
         ],
         "responses": {
-          "200": {
-            "description": "Board deleted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Board"
-                    }
-                  }
-                }
-              }
-            }
+          "204": {
+            "description": "Board deleted successfully"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Board not found"
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Server Error"
           }
         }
       },
       "put": {
-        "summary": "Update a specific board",
+        "summary": "Update a board by ID",
         "tags": ["Boards"],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "format": "objectId"
+            },
+            "description": "ID of the board to update"
           }
         ],
         "requestBody": {
@@ -524,38 +545,70 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BoardInput"
+                "$ref": "#/components/schemas/UpdateBoardRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Board updated",
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateBoardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Board"
+                    "message": {
+                      "type": "string"
                     }
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Invalid input"
-          },
           "404": {
-            "description": "Board not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
+
       "patch": {
         "summary": "Change board's background",
         "tags": ["Boards"],
@@ -579,754 +632,864 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ChangeBackgroundInput"
+                "$ref": "#/components/schemas/ChangeBoardsBackgroundRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Board background updated",
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeBoardsBackgroundResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Board"
+                    "message": {
+                      "type": "string"
                     }
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Invalid input"
-          },
           "404": {
-            "description": "Board not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-    "/columns/{boardId}": {
-      "get": {
-        "summary": "Get all columns by board ID",
-        "tags": ["Columns"],
-        "parameters": [
-          {
-            "name": "boardId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "ID of the board to get columns for"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
+            "description": "Board not found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ColumnArray"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Board not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        },
-        "security": [
-          {
-            "auth": []
-          }
-        ]
-      }
-    },
-    "/columns/{columnId}": {
-      "delete": {
-        "summary": "Delete a column by ID",
-        "tags": ["Columns"],
-        "parameters": [
-          {
-            "name": "columnId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "ID of the column to delete"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Column deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Column"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Column not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        },
-        "security": [
-          {
-            "auth": []
-          }
-        ]
-      },
-      "put": {
-        "summary": "Update a column by ID",
-        "tags": ["Columns"],
-        "parameters": [
-          {
-            "name": "columnId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "ID of the column to update"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Column"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Column updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Column"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input"
-          },
-          "404": {
-            "description": "Column not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        },
-        "security": [
-          {
-            "auth": []
-          }
-        ]
-      }
-    },
-    "/columns": {
-      "post": {
-        "summary": "Create a new column",
-        "tags": ["Columns"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Column"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Column created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Column"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        },
-        "security": [
-          {
-            "auth": []
-          }
-        ]
-      }
-    },
-    "/all/{columnId}": {
-      "get": {
-        "tags": ["Cards"],
-        "summary": "Отримати всі картки за ідентифікатором колонки",
-        "parameters": [
-          {
-            "name": "columnId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Ідентифікатор колонки"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Успішно отримано картки",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Card" }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Картки не знайдено"
-          },
-          "500": {
-            "description": "Внутрішня помилка сервера"
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    },
-    "/{cardId}": {
-      "get": {
-        "tags": ["Cards"],
-        "summary": "Отримати картку за ідентифікатором",
-        "parameters": [
-          {
-            "name": "cardId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Ідентифікатор картки"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Успішно отримано картку",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Card" }
-              }
-            }
-          },
-          "404": {
-            "description": "Картку не знайдено"
-          },
-          "500": {
-            "description": "Внутрішня помилка сервера"
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": ["Cards"],
-        "summary": "Видалити картку за ідентифікатором",
-        "parameters": [
-          {
-            "name": "cardId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Ідентифікатор картки"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Успішно видалено картку"
-          },
-          "404": {
-            "description": "Картку не знайдено"
-          },
-          "500": {
-            "description": "Внутрішня помилка сервера"
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      },
-      "put": {
-        "tags": ["Cards"],
-        "summary": "Оновити картку за ідентифікатором",
-        "parameters": [
-          {
-            "name": "cardId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Ідентифікатор картки"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Card" }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Успішно оновлено картку",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Card" }
-              }
-            }
-          },
-          "400": {
-            "description": "Неправильний запит"
-          },
-          "404": {
-            "description": "Картку не знайдено"
-          },
-          "500": {
-            "description": "Внутрішня помилка сервера"
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    },
-    "/": {
-      "post": {
-        "tags": ["Cards"],
-        "summary": "Створити нову картку",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Card" }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Успішно створено картку",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Card" }
-              }
-            }
-          },
-          "400": {
-            "description": "Неправильний запит"
-          },
-          "500": {
-            "description": "Внутрішня помилка сервера"
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "RegisterRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "Vlad"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "vlad@mail.com"
-          },
-          "password": {
-            "type": "string",
-            "format": "password",
-            "example": "12345678"
-          }
-        },
-        "required": ["email", "password", "name"]
-      },
-      "RegisterResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "user": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  },
-                  "avatarURL": {
-                    "type": "string",
-                    "format": "uri"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
                   }
-                },
-                "required": ["name", "email", "avatarURL"]
-              },
-              "token": {
-                "type": "string",
-                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
               }
-            },
-            "required": ["user", "token"]
-          }
-        }
-      },
-      "LoginRequest": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "vlad@mail.com"
+            }
           },
-          "password": {
-            "type": "string",
-            "example": "12345678"
-          }
-        },
-        "required": ["email", "password"]
-      },
-      "LoginResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "user": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  },
-                  "avatarURL": {
-                    "type": "string",
-                    "format": "uri"
-                  },
-                  "theme": {
-                    "type": "string",
-                    "example": "dark"
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
                   }
-                },
-                "required": ["name", "email", "avatarURL"]
-              },
-              "token": {
-                "type": "string",
-                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-              }
-            },
-            "required": ["user", "token"]
-          }
-        }
-      },
-      "TokenRequest": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "description": "User's authentication token"
-          }
-        },
-        "required": ["token"]
-      },
-      "CurrentUserResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "example": "vladtest@mail.com"
+                }
               }
             }
-          }
-        }
-      },
-      "EditProfileRequest": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "name": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string",
-            "format": "password"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "binary"
-          }
-        },
-        "required": []
-      },
-      "EditProfileResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "format": "email"
-              },
-              "name": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "avatarURL": {
-                "type": "string",
-                "format": "url"
-              }
-            }
-          }
-        }
-      },
-      "ErrorResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
           }
         }
       },
 
-      "ChangeThemeRequest": {
-        "type": "object",
-        "properties": {
-          "theme": {
-            "type": "string",
-            "enum": ["light", "dark", "violet"]
-          }
-        },
-        "required": ["theme"]
-      },
-      "ChangeThemeResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "theme": {
+      "/api/columns/{boardId}": {
+        "get": {
+          "summary": "Get all columns by board ID",
+          "tags": ["Columns"],
+          "parameters": [
+            {
+              "name": "boardId",
+              "in": "path",
+              "required": true,
+              "schema": {
                 "type": "string"
               },
-              "avatarURL": {
-                "type": "string",
-                "format": "url"
+              "description": "ID of the board to get columns for"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ColumnArray"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Board not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          },
+          "security": [
+            {
+              "auth": []
+            }
+          ]
+        }
+      },
+      "api/columns/{columnId}": {
+        "delete": {
+          "summary": "Delete a column by ID",
+          "tags": ["Columns"],
+          "parameters": [
+            {
+              "name": "columnId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID of the column to delete"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Column deleted successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Column"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Column not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          },
+          "security": [
+            {
+              "auth": []
+            }
+          ]
+        },
+        "put": {
+          "summary": "Update a column by ID",
+          "tags": ["Columns"],
+          "parameters": [
+            {
+              "name": "columnId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID of the column to update"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Column"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Column updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Column"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "404": {
+              "description": "Column not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          },
+          "security": [
+            {
+              "auth": []
+            }
+          ]
+        }
+      },
+      "api/columns": {
+        "post": {
+          "summary": "Create a new column",
+          "tags": ["Columns"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Column"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Column created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Column"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          },
+          "security": [
+            {
+              "auth": []
+            }
+          ]
+        }
+      },
+      "api/all/{columnId}": {
+        "get": {
+          "tags": ["Cards"],
+          "summary": "Отримати всі картки за ідентифікатором колонки",
+          "parameters": [
+            {
+              "name": "columnId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Ідентифікатор колонки"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Успішно отримано картки",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": { "$ref": "#/components/schemas/Card" }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Картки не знайдено"
+            },
+            "500": {
+              "description": "Внутрішня помилка сервера"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "api/cards/{cardId}": {
+        "get": {
+          "tags": ["Cards"],
+          "summary": "Отримати картку за ідентифікатором",
+          "parameters": [
+            {
+              "name": "cardId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Ідентифікатор картки"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Успішно отримано картку",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/Card" }
+                }
+              }
+            },
+            "404": {
+              "description": "Картку не знайдено"
+            },
+            "500": {
+              "description": "Внутрішня помилка сервера"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": ["Cards"],
+          "summary": "Видалити картку за ідентифікатором",
+          "parameters": [
+            {
+              "name": "cardId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Ідентифікатор картки"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Успішно видалено картку"
+            },
+            "404": {
+              "description": "Картку не знайдено"
+            },
+            "500": {
+              "description": "Внутрішня помилка сервера"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        },
+        "put": {
+          "tags": ["Cards"],
+          "summary": "Оновити картку за ідентифікатором",
+          "parameters": [
+            {
+              "name": "cardId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Ідентифікатор картки"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/Card" }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Успішно оновлено картку",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/Card" }
+                }
+              }
+            },
+            "400": {
+              "description": "Неправильний запит"
+            },
+            "404": {
+              "description": "Картку не знайдено"
+            },
+            "500": {
+              "description": "Внутрішня помилка сервера"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "api/cards": {
+        "post": {
+          "tags": ["Cards"],
+          "summary": "Create new card",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/Card" }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Access card created",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/Card" }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "RegisterRequest": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Vlad"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "vlad@mail.com"
+            },
+            "password": {
+              "type": "string",
+              "format": "password",
+              "example": "12345678"
+            }
+          },
+          "required": ["email", "password", "name"]
+        },
+        "LoginRequest": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "vlad@mail.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "12345678"
+            }
+          },
+          "required": ["email", "password"]
+        },
+        "EditProfileRequest": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "name": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string",
+              "minLength": 6
+            },
+            "avatarURL": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "required": []
+        },
+        "ChangeThemeRequest": {
+          "type": "object",
+          "properties": {
+            "theme": {
+              "type": "string",
+              "enum": ["light", "dark", "violet"]
+            }
+          },
+          "required": ["theme"]
+        },
+        "HelpRequest": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "user@example.com"
+            },
+            "comment": {
+              "type": "string",
+              "example": "I need help with something."
+            }
+          },
+          "required": ["email", "comment"]
+        },
+        "CreateBoardRequest": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "example": "My Board"
+            },
+            "background": {
+              "type": "string",
+              "example": "#FFFFFF"
+            },
+            "icon": {
+              "type": "string",
+              "example": "fa-star"
+            }
+          },
+          "required": ["title"]
+        },
+        "UpdateBoardRequest": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 50
+            },
+            "background": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            }
+          }
+        },
+        "ChangeBoardsBackgroundRequest": {
+          "type": "object",
+          "properties": {
+            "background": {
+              "type": "string"
+            }
+          },
+          "required": ["background"]
+        },
+
+        "RegisterResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "avatarURL": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  },
+                  "required": ["name", "email", "avatarURL"]
+                }
+              },
+              "required": ["user"]
+            }
+          }
+        },
+        "LoginResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "avatarURL": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "theme": {
+                      "type": "string",
+                      "example": "dark"
+                    }
+                  },
+                  "required": ["name", "email", "avatarURL"]
+                },
+                "token": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+              },
+              "required": ["user", "token"]
+            }
+          }
+        },
+        "CurrentUserResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "vladtest@mail.com"
+                }
               }
             }
           }
-        }
-      },
-      "HelpRequest": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "user@example.com"
-          },
-          "comment": {
-            "type": "string",
-            "example": "I need help with..."
+        },
+        "EditProfileResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "avatarURL": {
+                  "type": "string",
+                  "format": "url"
+                }
+              }
+            }
           }
         },
-        "required": ["email", "comment"]
-      },
-      "HelpResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
+        "ChangeThemeResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "theme": {
+                  "type": "string"
+                },
+                "avatarURL": {
+                  "type": "string",
+                  "format": "url"
+                }
+              }
+            }
+          }
+        },
+        "AllBoardResponse": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "Board ID"
+            },
+            "name": {
+              "type": "string",
+              "description": "Board name"
+            },
+            "owner": {
+              "type": "string",
+              "description": "Owner ID"
+            }
+          }
+        },
+        "CreateBoardResponse": {
+          "type": "object",
+          "properties": {
             "type": "object",
             "properties": {
-              "message": {
+              "_id": {
                 "type": "string",
-                "example": "Help request submitted successfully"
+                "example": "6123456789abcdef01234567"
+              },
+              "title": {
+                "type": "string",
+                "example": "My Board"
+              },
+              "background": {
+                "type": "string",
+                "example": "#FFFFFF"
+              },
+              "icon": {
+                "type": "string",
+                "example": "fa-star"
+              },
+              "owner": {
+                "type": "string",
+                "example": "6123456789abcdef01234567"
               }
             }
           }
-        }
-      },
-      "Board": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "background": {
-            "type": "string",
-            "default": "default_background"
-          },
-          "icon": {
-            "type": "string",
-            "default": "default_icon"
-          },
-          "owner": {
-            "type": "string",
-            "format": "ObjectId"
-          }
-        }
-      },
-      "BoardInput": {
-        "type": "object",
-        "required": ["title"],
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "background": {
-            "type": "string",
-            "default": "default_background",
-            "enum": ["background1", "background2", "background3"]
-          },
-          "icon": {
-            "type": "string",
-            "default": "default_icon",
-            "enum": ["icon1", "icon2", "icon3"]
-          }
-        }
-      },
-      "ChangeBackgroundInput": {
-        "type": "object",
-        "properties": {
-          "background": {
-            "type": "string",
-            "enum": ["background1", "background2", "background3"]
-          }
-        }
-      },
-      "Column": {
-        "type": "object",
-        "required": ["title"],
-        "properties": {
-          "title": {
-            "type": "string",
-            "description": "Title of the column"
-          },
-          "boardId": {
-            "type": "string",
-            "description": "ID of the board the column belongs to"
-          }
-        }
-      },
-      "ColumnArray": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Column"
-        }
-      },
-      "Card": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "description": "Назва картки"
-          },
-          "description": {
-            "type": "string",
-            "description": "Опис картки"
-          },
-          "priority": {
-            "type": "string",
-            "enum": ["low", "medium", "high", "without"],
-            "description": "Пріоритет картки"
-          },
-          "deadline": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Крайній термін"
-          },
-          "columnId": {
-            "type": "string",
-            "description": "Ідентифікатор колонки"
+        },
+        "GetBoardByIdResponse": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
           }
         },
-        "required": ["title", "columnId"]
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "securitySchemesCard": {
-      "BearerAuth": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header"
+        "UpdateBoardResponse": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "format": "objectId"
+            },
+            "title": {
+              "type": "string"
+            },
+            "background": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            }
+          }
+        },
+        "ChangeBoardsBackgroundResponse": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "title": {
+              "type": "string"
+            },
+            "background": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string",
+              "format": "ObjectId"
+            }
+          }
+        },
+
+        "ChangeBackgroundInput": {
+          "type": "object",
+          "properties": {
+            "background": {
+              "type": "string",
+              "enum": ["background1", "background2", "background3"]
+            }
+          }
+        },
+        "Column": {
+          "type": "object",
+          "required": ["title"],
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Title of the column"
+            },
+            "boardId": {
+              "type": "string",
+              "description": "ID of the board the column belongs to"
+            }
+          }
+        },
+        "ColumnArray": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Column"
+          }
+        },
+        "Card": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Card`s name"
+            },
+            "description": {
+              "type": "string",
+              "description": "Card`s description"
+            },
+            "priority": {
+              "type": "string",
+              "enum": ["low", "medium", "high", "without"],
+              "description": "Card`s priority"
+            },
+            "deadline": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date of deadline"
+            },
+            "columnId": {
+              "type": "string",
+              "description": "Column ID"
+            }
+          },
+          "required": ["title", "columnId"]
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
+      "securitySchemesCard": {
+        "BearerAuth": {
+          "type": "apiKey",
+          "name": "Authorization",
+          "in": "header"
+        }
       }
     }
   }
