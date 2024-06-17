@@ -694,103 +694,67 @@
             }
           }
         }
-      },
+      }
+    },
 
-      "/api/columns/{boardId}": {
-        "get": {
-          "summary": "Get all columns by board ID",
-          "tags": ["Columns"],
-          "parameters": [
-            {
-              "name": "boardId",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "ID of the board to get columns for"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/ColumnArray"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Board not found"
-            },
-            "500": {
-              "description": "Internal server error"
-            }
-          },
-          "security": [
-            {
-              "auth": []
-            }
-          ]
-        }
-      },
-      "api/columns/{columnId}": {
-        "delete": {
-          "summary": "Delete a column by ID",
-          "tags": ["Columns"],
-          "parameters": [
-            {
-              "name": "columnId",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "ID of the column to delete"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Column deleted successfully",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Column"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Column not found"
-            },
-            "500": {
-              "description": "Internal server error"
-            }
-          },
-          "security": [
-            {
-              "auth": []
-            }
-          ]
-        },
-        "put": {
-          "summary": "Update a column by ID",
-          "tags": ["Columns"],
-          "parameters": [
-            {
-              "name": "columnId",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "ID of the column to update"
-            }
-          ],
-          "requestBody": {
+    "/api/columns/{boardId}": {
+      "get": {
+        "summary": "Get all columns by board ID",
+        "tags": ["Columns"],
+        "parameters": [
+          {
+            "name": "boardId",
+            "in": "path",
             "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the board to get columns for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ColumnArray"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Board not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/api/columns/{columnId}": {
+      "delete": {
+        "summary": "Delete a column by ID",
+        "tags": ["Columns"],
+        "parameters": [
+          {
+            "name": "columnId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the column to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Column deleted successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -799,40 +763,46 @@
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Column updated successfully",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Column"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Invalid input"
-            },
-            "404": {
-              "description": "Column not found"
-            },
-            "500": {
-              "description": "Internal server error"
-            }
+          "404": {
+            "description": "Column not found"
           },
-          "security": [
-            {
-              "auth": []
-            }
-          ]
-        }
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
       },
-      "api/columns": {
-        "post": {
-          "summary": "Create a new column",
-          "tags": ["Columns"],
-          "requestBody": {
+      "put": {
+        "summary": "Update a column by ID",
+        "tags": ["Columns"],
+        "parameters": [
+          {
+            "name": "columnId",
+            "in": "path",
             "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the column to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Column"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Column updated successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -841,228 +811,297 @@
               }
             }
           },
-          "responses": {
-            "201": {
-              "description": "Column created successfully",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Column"
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Column not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/api/columns": {
+      "post": {
+        "summary": "Create a new column",
+        "tags": ["Columns"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateColumnRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Column created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateColumnResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
                   }
                 }
               }
-            },
-            "400": {
-              "description": "Invalid input"
-            },
-            "500": {
-              "description": "Internal server error"
             }
           },
-          "security": [
-            {
-              "auth": []
-            }
-          ]
-        }
-      },
-      "api/all/{columnId}": {
-        "get": {
-          "tags": ["Cards"],
-          "summary": "Отримати всі картки за ідентифікатором колонки",
-          "parameters": [
-            {
-              "name": "columnId",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "Ідентифікатор колонки"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Успішно отримано картки",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": { "$ref": "#/components/schemas/Card" }
+          "404": {
+            "description": "Board not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
                   }
                 }
               }
-            },
-            "404": {
-              "description": "Картки не знайдено"
-            },
-            "500": {
-              "description": "Внутрішня помилка сервера"
             }
           },
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ]
-        }
-      },
-      "api/cards/{cardId}": {
-        "get": {
-          "tags": ["Cards"],
-          "summary": "Отримати картку за ідентифікатором",
-          "parameters": [
-            {
-              "name": "cardId",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "Ідентифікатор картки"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Успішно отримано картку",
-              "content": {
-                "application/json": {
-                  "schema": { "$ref": "#/components/schemas/Card" }
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "api/all/{columnId}": {
+      "get": {
+        "tags": ["Cards"],
+        "summary": "Отримати всі картки за ідентифікатором колонки",
+        "parameters": [
+          {
+            "name": "columnId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             },
-            "404": {
-              "description": "Картку не знайдено"
-            },
-            "500": {
-              "description": "Внутрішня помилка сервера"
+            "description": "Ідентифікатор колонки"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успішно отримано картки",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Card" }
+                }
+              }
             }
           },
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ]
+          "404": {
+            "description": "Картки не знайдено"
+          },
+          "500": {
+            "description": "Внутрішня помилка сервера"
+          }
         },
-        "delete": {
-          "tags": ["Cards"],
-          "summary": "Видалити картку за ідентифікатором",
-          "parameters": [
-            {
-              "name": "cardId",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "Ідентифікатор картки"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Успішно видалено картку"
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/cards/{cardId}": {
+      "get": {
+        "tags": ["Cards"],
+        "summary": "Отримати картку за ідентифікатором",
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             },
-            "404": {
-              "description": "Картку не знайдено"
-            },
-            "500": {
-              "description": "Внутрішня помилка сервера"
+            "description": "Ідентифікатор картки"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успішно отримано картку",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Card" }
+              }
             }
           },
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ]
+          "404": {
+            "description": "Картку не знайдено"
+          },
+          "500": {
+            "description": "Внутрішня помилка сервера"
+          }
         },
-        "put": {
-          "tags": ["Cards"],
-          "summary": "Оновити картку за ідентифікатором",
-          "parameters": [
-            {
-              "name": "cardId",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "Ідентифікатор картки"
-            },
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "content": {
-                "application/json": {
-                  "schema": { "$ref": "#/components/schemas/Card" }
-                }
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Успішно оновлено картку",
-              "content": {
-                "application/json": {
-                  "schema": { "$ref": "#/components/schemas/Card" }
-                }
-              }
-            },
-            "400": {
-              "description": "Неправильний запит"
-            },
-            "404": {
-              "description": "Картку не знайдено"
-            },
-            "500": {
-              "description": "Внутрішня помилка сервера"
-            }
-          },
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ]
-        }
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       },
-      "api/cards": {
-        "post": {
-          "tags": ["Cards"],
-          "summary": "Create new card",
-          "parameters": [
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "content": {
-                "application/json": {
-                  "schema": { "$ref": "#/components/schemas/Card" }
-                }
+      "delete": {
+        "tags": ["Cards"],
+        "summary": "Видалити картку за ідентифікатором",
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Ідентифікатор картки"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успішно видалено картку"
+          },
+          "404": {
+            "description": "Картку не знайдено"
+          },
+          "500": {
+            "description": "Внутрішня помилка сервера"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Cards"],
+        "summary": "Оновити картку за ідентифікатором",
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Ідентифікатор картки"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Card" }
               }
             }
-          ],
-          "responses": {
-            "201": {
-              "description": "Access card created",
-              "content": {
-                "application/json": {
-                  "schema": { "$ref": "#/components/schemas/Card" }
-                }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успішно оновлено картку",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Card" }
               }
-            },
-            "400": {
-              "description": "Bad request"
-            },
-            "500": {
-              "description": "Server error"
             }
           },
-          "security": [
-            {
-              "BearerAuth": []
+          "400": {
+            "description": "Неправильний запит"
+          },
+          "404": {
+            "description": "Картку не знайдено"
+          },
+          "500": {
+            "description": "Внутрішня помилка сервера"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/cards": {
+      "post": {
+        "tags": ["Cards"],
+        "summary": "Create new card",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Card" }
+              }
             }
-          ]
-        }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Access card created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Card" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     }
   },
@@ -1191,6 +1230,20 @@
           }
         },
         "required": ["background"]
+      },
+      "CreateColumnRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "boardId": {
+            "type": "string"
+          }
+        },
+        "required": ["title", "boardId"]
       },
 
       "RegisterResponse": {
@@ -1416,6 +1469,23 @@
           "owner": {
             "type": "string",
             "format": "ObjectId"
+          }
+        }
+      },
+      "CreateColumnResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "boardId": {
+            "type": "string"
+          },
+          "__v": {
+            "type": "number"
           }
         }
       },
