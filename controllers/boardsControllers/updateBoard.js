@@ -4,7 +4,10 @@ import mongoose from "mongoose";
 import HttpError from "../../helpers/HttpError.js";
 
 const updateBoard = async (req, res) => {
+  
   const { error, value } = updateBoardSchema.validate(req.body);
+
+  console.log(error);
 
   // перевірка помилок валідації + корректності переданого ІД
   if (error) {
@@ -24,7 +27,7 @@ const updateBoard = async (req, res) => {
       return res.status(404).send({ message: HttpError(404).message });
     }
 
-    return res.status(200).send({ data: board });
+    return res.status(200).send({ board });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }

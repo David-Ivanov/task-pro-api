@@ -10,7 +10,7 @@ import updateCard from "../controllers/cardsControllers/updateCard.js";
 const cardsRouter = express.Router();
 const jsonParse = express.json();
 
-cardsRouter.get("/all/:columnId", auth, getAllCards);
+cardsRouter.get("/all", auth, getAllCards);
 
 cardsRouter.get("/:cardId", auth, getCard);
 

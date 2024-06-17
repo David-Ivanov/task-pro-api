@@ -23,7 +23,7 @@ const updateColumn = async (req, res) => {
       return res.status(404).send({ message: HttpError(404).message });
     }
 
-    return res.status(200).send({ data: column });
+    return res.status(200).send({ column });
   } catch (e) {
     return res.status(500).send({ message: HttpError(500, e.message).message });
   }

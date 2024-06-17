@@ -46,7 +46,7 @@ const changeTheme = async (req, res) => {
             { theme, avatarURL: avatar },
         );
 
-        res.status(200).send({ data: { theme, avatarURL: avatar } });
+        res.status(200).send({ theme, avatarURL: avatar });
     } catch (err) {
         res.status(400).send({ message: HttpError(400).message });
     }

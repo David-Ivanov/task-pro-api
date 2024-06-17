@@ -11,7 +11,7 @@ const current = async (req, res) => {
 
     const result = await User.findById(data.id);
 
-    res.status(200).send({ data: { email: result.email } });
+    res.status(200).send({ email: result.email, name: result.name, avatarURL: result.avatarURL, theme: result.theme });
 }
 
 export default current;

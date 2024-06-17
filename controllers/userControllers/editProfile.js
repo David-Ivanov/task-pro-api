@@ -22,27 +22,33 @@ const editProfile = async (req, res) => {
         const data = jwt.decode(token);
 
         const user = await User.findById(data.id);
-        if (!name) {
-            name = user.name
+        if (!name || name === "") {
+            name = user.name;
         }
-        if (!email) {
-            email = user.email
+        if (!email || email === "") {
+            email = user.email;
         }
-        if (!password) {
-            password = user.password
+        if (!password || password === "") {
+            password = user.password;
         } else {
             password = await bcrypt.hash(password, 10);
         }
 
-
-        // update avatar 
-        let result;
+        // update avatar
+        let result = {
+            avatarURL: user.avatarURL,
+            avatarId: user.avatarId,
+        };
         if (req.file) {
-            result = await updateAvatar(req, res, data);
+            const imageOnCloud = await updateAvatar(req, res, data);
+            result = {
+                avatarId: imageOnCloud.avatarId,
+                avatarURL: imageOnCloud.avatarURL,
+            };
         }
 
         // update user
-        await User.findByIdAndUpdate(
+        const updatedUser = await User.findByIdAndUpdate(
             data.id,
             {
                 email,
@@ -54,10 +60,14 @@ const editProfile = async (req, res) => {
             { new: true }
         );
 
-        res.status(200).send({ data: { email, name, password, avatarURL: result.avatarURL } });
+        if (!updatedUser) {
+            return res.status(400).send({ message: "This email already in use" });
+        }
+
+        res.status(200).send({ email, name, avatarURL: result.avatarURL });
     } catch (err) {
-        res.status(500).send({ message: HttpError(500).message })
+        res.status(400).send({ message: "This email already in use" });
     }
-}
+};
 
 export default editProfile;

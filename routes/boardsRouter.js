@@ -19,8 +19,8 @@ boardsRouter.delete("/:id", auth, deleteBoard);
 
 boardsRouter.post("/", auth, jsonParse, createBoard);
 
-boardsRouter.put("/:id", auth, jsonParse, updateBoard);
+boardsRouter.patch("/:id", auth, jsonParse, updateBoard);
 
-boardsRouter.patch("/:id", auth, jsonParse, changeBoardsBackground);
+// boardsRouter.patch("/:id", auth, jsonParse, changeBoardsBackground);
 
 export default boardsRouter;

@@ -23,7 +23,7 @@ export const updateBoardSchema = Joi.object({
     "string.min": "Min. title length is 1 symbol",
     "string.max": "Max. title length is 50 symbols",
   }),
-  background: Joi.string().trim().messages({
+  background: Joi.string().allow(null).trim().messages({
     "string.base": "'background' must be string type",
   }),
   icon: Joi.string().trim().messages({
@@ -66,7 +66,7 @@ export const createCardSchema = Joi.object({
     "string.max": "Max. description length is 1000 symbols",
   }),
   priority: Joi.string().valid("low", "medium", "high", "without"),
-  deadline: Joi.date(),
+  deadline: Joi.date().allow(null),
   columnId: Joi.string().required().messages({
     "any.required": "'columnId' value is required",
   }),
@@ -81,7 +81,7 @@ export const updateCardSchema = Joi.object({
     "string.max": "Max. description length is 1000 symbols",
   }),
   priority: Joi.string().valid("low", "medium", "high", "without"),
-  deadline: Joi.date(),
+  deadline: Joi.date().allow(null),
   columnId: Joi.string().messages({
     "any.required": "'columnId' value is required",
   }),

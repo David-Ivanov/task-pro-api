@@ -9,9 +9,9 @@ const authRouter = express.Router();
 
 const jsonParse = express.json();
 
+authRouter.get("/current", current);
 authRouter.post("/register", jsonParse, register);
 authRouter.post("/login", jsonParse, login);
 authRouter.post("/logout", auth, logout);
-authRouter.get("/current", auth, current);
 
 export default authRouter;

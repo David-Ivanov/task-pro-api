@@ -16,13 +16,17 @@ const card = new Schema(
       default: "without",
     },
     deadline: {
-      type: Date,
+      type: [Schema.Types.Mixed],
       default: null,
     },
     columnId: {
       type: Schema.Types.ObjectId,
       ref: "Column",
       required: [true, "Column id is required"],
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   { versionKey: false }
