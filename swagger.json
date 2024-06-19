@@ -398,49 +398,6 @@
       }
     },
     "/api/boards": {
-      "get": {
-        "summary": "Get all boards",
-        "tags": ["Boards"],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "The token issued to the current user.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of boards",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/AllBoardResponse"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      },
       "post": {
         "summary": "Create a new board",
         "tags": ["Boards"],
@@ -463,7 +420,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/CreateBoardRequest"
               }
@@ -510,6 +467,49 @@
                 }
               }
             }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all boards",
+        "tags": ["Boards"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "The token issued to the current user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of boards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AllBoardResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -1597,7 +1597,8 @@
         "properties": {
           "theme": {
             "type": "string",
-            "enum": ["light", "dark", "violet"]
+            "enum": ["light", "dark", "violet"],
+            "example": "dark"
           }
         },
         "required": ["theme"]
@@ -1626,11 +1627,11 @@
           },
           "background": {
             "type": "string",
-            "example": "#FFFFFF"
+            "example": "task-bg-phone-3"
           },
           "icon": {
             "type": "string",
-            "example": "fa-star"
+            "example": "icon-board"
           }
         },
         "required": ["title"]
@@ -1640,14 +1641,15 @@
         "properties": {
           "title": {
             "type": "string",
-            "minLength": 1,
-            "maxLength": 50
+            "example": "My Board"
           },
           "background": {
-            "type": "string"
+            "type": "string",
+            "example": "task-bg-phone-3"
           },
           "icon": {
-            "type": "string"
+            "type": "string",
+            "example": "icon-board"
           }
         }
       },
@@ -1655,7 +1657,8 @@
         "type": "object",
         "properties": {
           "background": {
-            "type": "string"
+            "type": "string",
+            "example": "task-bg-phone-3"
           }
         },
         "required": ["background"]
@@ -1665,11 +1668,10 @@
         "properties": {
           "title": {
             "type": "string",
-            "minLength": 1,
-            "maxLength": 50
+            "example": "In progress"
           },
           "boardId": {
-            "type": "string"
+            "type": "ef003-14"
           }
         },
         "required": ["title", "boardId"]
@@ -1678,15 +1680,18 @@
         "type": "object",
         "properties": {
           "title": {
-            "type": "string"
+            "type": "string",
+            "example": "In progress"
           },
           "boardId": {
             "type": "string",
-            "format": "objectId"
+            "format": "objectId",
+            "example": "60c72b2f9b1e8a6d4c7"
           },
           "owner": {
             "type": "string",
-            "format": "objectId"
+            "format": "objectId",
+            "example": "60c72b2f9b1e8a6d4c7"
           }
         },
         "required": ["title"]
@@ -1696,23 +1701,25 @@
         "properties": {
           "title": {
             "type": "string",
-            "minLength": 1,
-            "maxLength": 50
+            "example": "Task"
           },
           "description": {
             "type": "string",
-            "maxLength": 1000
+            "example": "Complete all the pending tasks for the project"
           },
           "priority": {
             "type": "string",
-            "enum": ["low", "medium", "high", "without"]
+            "enum": ["low", "medium", "high", "without"],
+            "example": "high"
           },
           "deadline": {
             "type": "string",
-            "format": "date-time"
+            "format": "date",
+            "example": "2024-06-18"
           },
           "columnId": {
-            "type": "string"
+            "type": "string",
+            "example": "60c72b2f9b1e8a6d4c7"
           }
         },
         "required": ["title", "columnId"]
@@ -1722,24 +1729,25 @@
         "properties": {
           "title": {
             "type": "string",
-            "minLength": 1,
-            "maxLength": 50
+            "example": "Task"
           },
           "description": {
             "type": "string",
-            "minLength": 0,
-            "maxLength": 1000
+            "example": "Complete all the pending tasks for the project"
           },
           "priority": {
             "type": "string",
-            "enum": ["low", "medium", "high", "without"]
+            "enum": ["low", "medium", "high", "without"],
+            "example": "high"
           },
           "deadline": {
-            "type": ["string", "null"],
-            "format": "date-time"
+            "type": "string",
+            "format": "date",
+            "example": "2024-06-18"
           },
           "columnId": {
-            "type": "string"
+            "type": "string",
+            "example": "60c72b2f9b1e8a6d4c7"
           }
         },
         "required": ["title", "columnId"]
@@ -1748,135 +1756,125 @@
       "RegisterResponse": {
         "type": "object",
         "properties": {
-          "data": {
+          "user": {
             "type": "object",
             "properties": {
-              "user": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  },
-                  "avatarURL": {
-                    "type": "string",
-                    "format": "uri"
-                  }
-                },
-                "required": ["name", "email", "avatarURL"]
-              }
-            },
-            "required": ["user"]
-          }
-        }
-      },
-      "LoginResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "user": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  },
-                  "avatarURL": {
-                    "type": "string",
-                    "format": "uri"
-                  },
-                  "theme": {
-                    "type": "string",
-                    "example": "dark"
-                  }
-                },
-                "required": ["name", "email", "avatarURL"]
-              },
-              "token": {
-                "type": "string",
-                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-              }
-            },
-            "required": ["user", "token"]
-          }
-        }
-      },
-      "CurrentUserResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "example": "vladtest@mail.com"
-              }
-            }
-          }
-        }
-      },
-      "EditProfileResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "format": "email",
-                "example": "columnscards@test.com"
-              },
               "name": {
                 "type": "string",
                 "example": "Vlad"
               },
-
+              "email": {
+                "type": "string",
+                "example": "vlad@mail.com"
+              },
               "avatarURL": {
                 "type": "string",
                 "format": "url",
                 "example": "http://res.cloudinary.com/daqlrgzqj/image/upload/v1718476036/avatars/t7axgw8iupoavdq24nwq.jpg"
               }
-            }
+            },
+            "required": ["name", "email", "avatarURL"]
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Vlad"
+              },
+              "email": {
+                "type": "string",
+                "example": "vlad@mail.com"
+              },
+              "avatarURL": {
+                "type": "string",
+                "format": "url",
+                "example": "http://res.cloudinary.com/daqlrgzqj/image/upload/v1718476036/avatars/t7axgw8iupoavdq24nwq.jpg"
+              },
+              "theme": {
+                "type": "string",
+                "example": "dark"
+              }
+            },
+            "required": ["name", "email", "avatarURL"]
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        },
+        "required": ["user", "token"]
+      },
+      "CurrentUserResponse": {
+        "type": "object",
+
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "columnscards@test.com"
+          },
+          "name": {
+            "type": "string",
+            "example": "Vlad"
+          },
+
+          "avatarURL": {
+            "type": "string",
+            "format": "url",
+            "example": "http://res.cloudinary.com/daqlrgzqj/image/upload/v1718476036/avatars/t7axgw8iupoavdq24nwq.jpg"
+          },
+          "theme": {
+            "type": "string",
+            "example": "dark"
+          }
+        }
+      },
+      "EditProfileResponse": {
+        "type": "object",
+
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "columnscards@test.com"
+          },
+          "name": {
+            "type": "string",
+            "example": "Vlad"
+          },
+
+          "avatarURL": {
+            "type": "string",
+            "format": "url",
+            "example": "http://res.cloudinary.com/daqlrgzqj/image/upload/v1718476036/avatars/t7axgw8iupoavdq24nwq.jpg"
           }
         }
       },
       "ChangeThemeResponse": {
         "type": "object",
+
         "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "theme": {
-                "type": "string"
-              },
-              "avatarURL": {
-                "type": "string",
-                "format": "url"
-              }
-            }
-          }
-        }
-      },
-      "AllBoardResponse": {
-        "type": "object",
-        "properties": {
-          "_id": {
+          "theme": {
             "type": "string",
-            "description": "Board ID"
+            "enum": ["light", "dark", "violet"],
+
+            "example": "dark"
           },
-          "name": {
+          "avatarURL": {
             "type": "string",
-            "description": "Board name"
-          },
-          "owner": {
-            "type": "string",
-            "description": "Owner ID"
+            "format": "url",
+            "example": "http://res.cloudinary.com/daqlrgzqj/image/upload/v1718476036/avatars/t7axgw8iupoavdq24nwq.jpg"
           }
         }
       },
@@ -1895,11 +1893,11 @@
             },
             "background": {
               "type": "string",
-              "example": "#FFFFFF"
+              "example": "task-bg-phone-3"
             },
             "icon": {
               "type": "string",
-              "example": "fa-star"
+              "example": "icon-board"
             },
             "owner": {
               "type": "string",
@@ -1908,19 +1906,41 @@
           }
         }
       },
+      "AllBoardResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Board ID",
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
+          },
+          "name": {
+            "type": "string",
+            "description": "Board name",
+            "example": "In progress"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Owner ID",
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
+          }
+        }
+      },
+
       "GetBoardByIdResponse": {
         "type": "object",
         "properties": {
           "_id": {
             "type": "string",
-            "format": "uuid"
+            "example": "6123456789abcdef01234567"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "example": "My Board"
           },
           "owner": {
             "type": "string",
-            "format": "uuid"
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "createdAt": {
             "type": "string",
@@ -1937,16 +1957,19 @@
         "properties": {
           "_id": {
             "type": "string",
-            "format": "objectId"
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "example": "My Board"
           },
           "background": {
-            "type": "string"
+            "type": "string",
+            "example": "task-bg-phone-3"
           },
           "icon": {
-            "type": "string"
+            "type": "string",
+            "example": "icon-board"
           }
         }
       },
@@ -1955,20 +1978,23 @@
         "properties": {
           "_id": {
             "type": "string",
-            "format": "ObjectId"
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "example": "My Board"
           },
           "background": {
-            "type": "string"
+            "type": "string",
+            "example": "task-bg-phone-3"
           },
           "icon": {
-            "type": "string"
+            "type": "string",
+            "example": "icon-board"
           },
           "owner": {
             "type": "string",
-            "format": "ObjectId"
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           }
         }
       },
@@ -1976,13 +2002,16 @@
         "type": "object",
         "properties": {
           "_id": {
-            "type": "string"
+            "type": "string",
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "example": "My Board"
           },
           "boardId": {
-            "type": "string"
+            "type": "string",
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "__v": {
             "type": "number"
@@ -1994,15 +2023,17 @@
         "properties": {
           "_id": {
             "type": "string",
-            "description": "Unique identifier for the column"
+            "description": "Unique identifier for the column",
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "name": {
             "type": "string",
-            "description": "Name of the column"
+            "description": "Name of the column",
+            "example": "My Board"
           },
           "owner": {
             "type": "string",
-            "description": "Owner of the column"
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "createdAt": {
             "type": "string",
@@ -2022,20 +2053,23 @@
         "properties": {
           "_id": {
             "type": "string",
-            "description": "ID of the column"
+            "description": "ID of the column",
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "title": {
             "type": "string",
             "description": "Title of the column",
-            "example": "To Do"
+            "example": "Task"
           },
           "boardId": {
             "type": "string",
-            "description": "ID of the board to which the column belongs"
+            "description": "ID of the board to which the column belongs",
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "owner": {
             "type": "string",
-            "description": "ID of the user who owns the column"
+            "description": "ID of the user who owns the column",
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           }
         }
       },
@@ -2044,18 +2078,19 @@
         "properties": {
           "_id": {
             "type": "string",
-            "format": "objectId"
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "example": "Task"
           },
           "boardId": {
             "type": "string",
-            "format": "objectId"
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "owner": {
             "type": "string",
-            "format": "objectId"
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           }
         }
       },
@@ -2066,24 +2101,30 @@
             "type": "object",
             "properties": {
               "title": {
-                "type": "string"
+                "type": "string",
+                "example": "Task"
               },
               "description": {
-                "type": "string"
+                "type": "string",
+                "example": "To do it"
               },
               "priority": {
                 "type": "string",
-                "enum": ["low", "medium", "high", "without"]
+                "enum": ["low", "medium", "high"],
+                "example": "high"
               },
               "deadline": {
                 "type": "string",
-                "format": "date-time"
+                "format": "date",
+                "example": "2024-06-18"
               },
               "columnId": {
-                "type": "string"
+                "type": "string",
+                "example": "60c72b2f9b1e8a6d4c7a9a1d"
               },
               "owner": {
-                "type": "string"
+                "type": "string",
+                "example": "60c72b2f9b1e8a6d4c7a9a1d"
               }
             }
           }
@@ -2104,25 +2145,21 @@
           },
           "priority": {
             "type": "string",
-            "enum": ["low", "medium", "high", "all"],
-            "default": "all",
-            "description": "Priority level of the card"
+            "enum": ["low", "medium", "high", "without"],
+            "example": "high"
           },
           "deadline": {
-            "type": "array",
-            "items": {},
-            "default": null,
-            "description": "Deadline for the card"
+            "type": "string",
+            "format": "date",
+            "example": "2024-06-18"
           },
           "columnId": {
             "type": "string",
-            "format": "uuid",
-            "description": "ID of the column where the card belongs"
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           },
           "owner": {
             "type": "string",
-            "format": "uuid",
-            "description": "ID of the owner (user) of the card"
+            "example": "60c72b2f9b1e8a6d4c7a9a1d"
           }
         },
         "required": ["title", "columnId"],
@@ -2130,7 +2167,7 @@
           "title": "Task A",
           "description": "This is a task that needs to be completed.",
           "priority": "medium",
-          "deadline": null,
+          "deadline": "2024-06-18",
           "columnId": "5fd3c0e1577a1a1f240c7ea1",
           "owner": "5fd3c0e1577a1a1f240c7e99"
         }
@@ -2146,34 +2183,28 @@
           "description": {
             "type": "string",
             "description": "Description of the card",
-            "default": null,
+
             "example": "This is a description"
           },
           "priority": {
             "type": "string",
             "enum": ["low", "medium", "high", "without"],
-            "default": "without",
+
             "description": "Priority of the card",
             "example": "medium"
           },
           "deadline": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            },
-            "default": null,
-            "description": "Deadline of the card (mixed type)"
+            "type": "string",
+            "format": "date",
+            "example": "2024-06-18"
           },
           "columnId": {
             "type": "string",
-            "format": "uuid",
-            "description": "ID of the column to which the card belongs",
             "example": "60a78d33b30f0848481e7a4d"
           },
           "owner": {
             "type": "string",
-            "format": "uuid",
-            "description": "ID of the user who owns the card (if applicable)",
+
             "example": "60a78d33b30f0848481e7a4e"
           }
         }
@@ -2194,14 +2225,13 @@
           "priority": {
             "type": "string",
             "enum": ["low", "medium", "high", "without"],
-            "default": "without",
-            "description": "Priority level of the card"
+
+            "example": "high"
           },
           "deadline": {
-            "type": "array",
-            "items": {},
-            "default": null,
-            "description": "Deadline for the card"
+            "type": "string",
+            "format": "date",
+            "example": "2024-06-18"
           },
           "columnId": {
             "type": "string",
@@ -2222,24 +2252,29 @@
             "type": "object",
             "properties": {
               "_id": {
-                "type": "string"
+                "type": "string",
+                "example": "60a78d33b30f0848481e7a4e"
               },
               "title": {
                 "type": "string"
               },
               "description": {
-                "type": "string"
+                "type": "string",
+                "example": "Task"
               },
               "priority": {
                 "type": "string",
-                "enum": ["low", "medium", "high", "without"]
+                "enum": ["low", "medium", "high", "without"],
+                "example": "high"
               },
               "deadline": {
-                "type": ["string", "null"],
-                "format": "date-time"
+                "type": "string",
+                "format": "date",
+                "example": "2024-06-18"
               },
               "columnId": {
-                "type": "string"
+                "type": "string",
+                "example": "6097e7c8f318a2001538e2c7"
               },
               "owner": {
                 "type": "string",
